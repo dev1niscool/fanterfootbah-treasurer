@@ -35,6 +35,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
   color: var(--ink);
   background:
     radial-gradient(circle at 88% 8%, rgba(84, 180, 122, 0.12), transparent 26rem),
@@ -1070,15 +1071,15 @@ td {
 
 .bracket {
   display: grid;
-  grid-template-columns: repeat(3, minmax(210px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: start;
   gap: 14px;
-  overflow-x: auto;
+  overflow: visible;
   padding-bottom: 8px;
 }
 
 .bracket-round {
-  min-width: 210px;
+  min-width: 0;
 }
 
 .bracket-round-heading {
@@ -2182,11 +2183,11 @@ tr.is-you td {
   left: max(18px, env(safe-area-inset-left));
   display: inline-flex;
   align-items: center;
-  min-height: 52px;
-  gap: 10px;
-  padding: 7px 15px 7px 7px;
+  min-height: 42px;
+  gap: 8px;
+  padding: 5px 11px 5px 5px;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
+  border-radius: 13px;
   color: white;
   background: rgba(16, 33, 25, 0.96);
   box-shadow: 0 12px 34px rgba(16, 33, 25, 0.28);
@@ -2213,11 +2214,11 @@ tr.is-you td {
 
 .toggle-box {
   display: grid;
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   place-items: center;
   border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 11px;
+  border-radius: 9px;
   color: transparent;
   background: rgba(255, 255, 255, 0.1);
   transition: color 150ms ease, background 150ms ease;
@@ -2240,13 +2241,13 @@ tr.is-you td {
 }
 
 .buyin-toggle-copy strong {
-  font-size: 11px;
+  font-size: 10px;
 }
 
 .buyin-toggle-copy small {
-  margin-top: 4px;
+  margin-top: 3px;
   color: rgba(255, 255, 255, 0.56);
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -2660,6 +2661,17 @@ body.is-signing-in .buyin-toggle {
     height: 18px;
     transform: rotate(90deg);
   }
+
+  .bracket {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+
+  .bracket-round {
+    min-width: 0;
+  }
 }
 
 @media (max-width: 560px) {
@@ -2677,12 +2689,13 @@ body.is-signing-in .buyin-toggle {
   }
 
   .quick-stat-grid {
-    grid-template-columns: repeat(3, minmax(95px, 1fr));
-    overflow-x: auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: visible;
   }
 
   .quick-stat {
-    min-width: 95px;
+    min-width: 0;
+    padding: 11px 9px;
   }
 
   .section-heading > p {
@@ -2703,24 +2716,61 @@ body.is-signing-in .buyin-toggle {
   }
 
   th:nth-child(3),
-  td:nth-child(3) {
-    display: table-cell;
-  }
-
+  td:nth-child(3),
   th:nth-child(4),
   td:nth-child(4) {
     display: none;
   }
 
+  .table-wrap {
+    overflow-x: visible;
+  }
+
+  table {
+    table-layout: fixed;
+  }
+
+  th,
+  td {
+    padding: 10px 6px;
+  }
+
+  th:first-child,
+  td:first-child {
+    width: 46px;
+    padding-left: 10px;
+  }
+
+  th:last-child,
+  td:last-child {
+    width: 76px;
+    padding-right: 10px;
+  }
+
   .team-cell {
-    min-width: 175px;
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .team-cell .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+  }
+
+  .team-cell > span:last-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .team-cell small {
+    overflow-wrap: anywhere;
   }
 
   .buyin-toggle {
-    right: 10px;
+    right: auto;
     bottom: max(10px, calc(env(safe-area-inset-bottom) + 8px));
     left: 10px;
-    justify-content: center;
   }
 
   .toast {
@@ -2729,18 +2779,85 @@ body.is-signing-in .buyin-toggle {
 
   .pot-total-panel {
     grid-template-columns: 1fr;
+    padding: 18px;
   }
 
   .pot-ring {
+    width: 160px;
+    height: 160px;
     margin: 0 auto;
+  }
+
+  .pot-ring::before {
+    width: 108px;
+    height: 108px;
   }
 
   .prize-bar-row {
     grid-template-columns: minmax(140px, 1fr) 50px;
   }
 
+  .prize-bars,
+  .waterfall-steps {
+    padding-inline: 16px;
+  }
+
+  .rounding-note {
+    margin-inline: 16px;
+  }
+
   .prize-bar-track {
     grid-column: 1 / -1;
     grid-row: 2;
+  }
+
+  .tab-rail {
+    margin-inline: 0;
+  }
+
+  .tab-list {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: visible;
+  }
+
+  .tab-button {
+    width: 100%;
+    min-height: 38px;
+    padding-inline: 7px;
+    font-size: 10px;
+  }
+
+  .matchup-team > span:not(.avatar),
+  .bracket-team > span:not(.bracket-seed) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .locker-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 380px) {
+  .page-shell {
+    width: calc(100% - 16px);
+  }
+
+  .brand-copy strong {
+    font-size: 16px;
+  }
+
+  .quick-strip {
+    padding: 17px;
+  }
+
+  .quick-stat strong {
+    font-size: 18px;
+  }
+
+  .locker-stat-grid {
+    grid-template-columns: 1fr;
   }
 }
