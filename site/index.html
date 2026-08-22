@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="FanterFootbah league dues, payouts, schedule, playoff prizes, and personalized owner stats."
+    />
+    <meta name="theme-color" content="#101d17" />
+    <title>FanterFootbah · Treasurer Room</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to league dashboard</a>
+
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="#overview" aria-label="FanterFootbah home">
+          <span class="brand-mark" aria-hidden="true">
+            <span>FF</span>
+          </span>
+          <span class="brand-copy">
+            <strong>FanterFootbah</strong>
+            <small>Treasurer Room</small>
+          </span>
+        </a>
+
+        <div class="header-actions">
+          <span class="sync-pill" id="sync-pill">
+            <span class="sync-dot" aria-hidden="true"></span>
+            <span id="sync-label">Loading league data…</span>
+          </span>
+          <a
+            class="icon-link"
+            href="https://1drv.ms/x/c/8420cee342e1f353/IQA9HFrbvWfhS5oYN7S5h8lnAQOXX5uVZ_3CFWdYeMBHte8"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Open workbook
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </header>
+
+      <main id="main">
+        <section class="hero" aria-labelledby="league-title">
+          <div class="hero-copy">
+            <p class="eyebrow"><span></span> League finance HQ</p>
+            <h1 id="league-title">The books, minus the spreadsheet anxiety.</h1>
+            <p class="hero-lede">
+              Buy-ins, weekly wins, playoff cash, and every owner’s bottom line—cleanly organized in one place.
+            </p>
+            <div class="hero-actions">
+              <button class="button button-primary" type="button" data-jump-tab="my-locker">
+                Check my numbers
+                <span aria-hidden="true">→</span>
+              </button>
+              <button class="button button-secondary" type="button" data-jump-tab="schedule">
+                View the schedule
+              </button>
+            </div>
+          </div>
+
+          <div class="hero-scoreboard" id="hero-scoreboard" aria-label="League payment snapshot">
+            <div class="scoreboard-topline">
+              <span>League pot</span>
+              <span id="hero-season">Season</span>
+            </div>
+            <strong id="hero-pot">—</strong>
+            <div class="scoreboard-meter" aria-hidden="true">
+              <span id="hero-pot-meter"></span>
+            </div>
+            <div class="scoreboard-footer">
+              <div>
+                <small>Collected</small>
+                <b id="hero-collected">—</b>
+              </div>
+              <div>
+                <small>Teams paid</small>
+                <b id="hero-teams-paid">—</b>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <nav class="tab-rail" aria-label="League sections">
+          <div class="tab-list" role="tablist" aria-label="FanterFootbah data views">
+            <button class="tab-button is-active" id="tab-overview" role="tab" aria-selected="true" aria-controls="overview" data-tab="overview">
+              Overview
+            </button>
+            <button class="tab-button" id="tab-teams" role="tab" aria-selected="false" aria-controls="teams" data-tab="teams">
+              Teams
+            </button>
+            <button class="tab-button" id="tab-schedule" role="tab" aria-selected="false" aria-controls="schedule" data-tab="schedule">
+              Schedule
+            </button>
+            <button class="tab-button" id="tab-playoffs" role="tab" aria-selected="false" aria-controls="playoffs" data-tab="playoffs">
+              Playoffs
+            </button>
+            <button class="tab-button tab-personal" id="tab-my-locker" role="tab" aria-selected="false" aria-controls="my-locker" data-tab="my-locker">
+              <span aria-hidden="true">✦</span> My Locker
+            </button>
+          </div>
+        </nav>
+
+        <div class="tab-panels">
+          <section class="tab-panel is-active" id="overview" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Money board</p>
+                <h2>League at a glance</h2>
+              </div>
+              <p>Everything the group chat is about to ask.</p>
+            </div>
+
+            <div class="metric-grid" id="overview-metrics"></div>
+
+            <div class="dashboard-grid">
+              <article class="panel panel-wide">
+                <div class="panel-heading">
+                  <div>
+                    <p class="panel-kicker">Current standings</p>
+                    <h3>Earnings leaderboard</h3>
+                  </div>
+                  <button class="text-button" type="button" data-jump-tab="teams">All teams →</button>
+                </div>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">Rank</th>
+                        <th scope="col">Team</th>
+                        <th scope="col">Wins</th>
+                        <th scope="col">Earned</th>
+                        <th scope="col">Net</th>
+                      </tr>
+                    </thead>
+                    <tbody id="leaderboard-body"></tbody>
+                  </table>
+                </div>
+              </article>
+
+              <article class="panel payout-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="panel-kicker">Where the pot goes</p>
+                    <h3>Payout mix</h3>
+                  </div>
+                </div>
+                <div id="payout-mix"></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="tab-panel" id="teams" role="tabpanel" aria-labelledby="tab-teams" tabindex="0" hidden>
+            <div class="section-heading section-heading-with-control">
+              <div>
+                <p class="eyebrow">All 16 franchises</p>
+                <h2>Teams & buy-ins</h2>
+              </div>
+              <label class="search-box">
+                <span class="visually-hidden">Search teams or owners</span>
+                <span aria-hidden="true">⌕</span>
+                <input id="team-search" type="search" placeholder="Search a team or owner" autocomplete="off" />
+              </label>
+            </div>
+            <div class="team-grid" id="team-grid"></div>
+          </section>
+
+          <section class="tab-panel" id="schedule" role="tabpanel" aria-labelledby="tab-schedule" tabindex="0" hidden>
+            <div class="section-heading section-heading-with-control">
+              <div>
+                <p class="eyebrow">Regular season</p>
+                <h2>Weekly matchups</h2>
+              </div>
+              <label class="select-field compact-select">
+                <span>Week</span>
+                <select id="week-select" aria-label="Choose a regular season week"></select>
+              </label>
+            </div>
+            <div class="week-summary" id="week-summary"></div>
+            <div class="matchup-grid" id="matchup-grid"></div>
+          </section>
+
+          <section class="tab-panel" id="playoffs" role="tabpanel" aria-labelledby="tab-playoffs" tabindex="0" hidden>
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Weeks 15–17</p>
+                <h2>The road to the money</h2>
+              </div>
+              <p>Quarterfinals through the championship.</p>
+            </div>
+            <div class="playoff-layout">
+              <div class="bracket" id="playoff-bracket"></div>
+              <aside class="panel podium-panel">
+                <p class="panel-kicker">Prize podium</p>
+                <h3>Final payouts</h3>
+                <div id="podium-list"></div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="tab-panel" id="my-locker" role="tabpanel" aria-labelledby="tab-my-locker" tabindex="0" hidden>
+            <div class="locker-intro">
+              <div>
+                <p class="eyebrow"><span></span> Personal stat room</p>
+                <h2>How are <em>you</em> doing?</h2>
+                <p>Pick your name to see your team’s season, payments, winnings, and net position.</p>
+              </div>
+              <label class="select-field owner-select-field">
+                <span>Select your name</span>
+                <select id="owner-select">
+                  <option value="">Choose an owner…</option>
+                </select>
+              </label>
+            </div>
+            <div class="locker-empty" id="locker-empty">
+              <span class="locker-ball" aria-hidden="true">FF</span>
+              <h3>Your personal numbers live here.</h3>
+              <p>Choose your name above and we’ll do the spreadsheet spelunking for you.</p>
+            </div>
+            <div class="locker-results" id="locker-results" hidden></div>
+          </section>
+        </div>
+      </main>
+
+      <footer>
+        <div>
+          <strong>FanterFootbah</strong>
+          <span>Receipts kept. Drama optional.</span>
+        </div>
+        <p id="footer-sync">League data is loading.</p>
+      </footer>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
