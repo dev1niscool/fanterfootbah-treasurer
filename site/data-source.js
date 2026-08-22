@@ -1,5 +1,27 @@
 export const GOOGLE_SHEET_ID = "1NtRDgw3Jzo5HtB4zU-lnx5niiFDKfPLJww4ToEjqsHg";
 export const GOOGLE_SHEET_URL = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/edit?usp=sharing`;
+export const ESPN_LEAGUE_URL = "https://fantasy.espn.com/football/league?leagueId=635040019";
+export const ESPN_API_URL =
+  "https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/2026/segments/0/leagues/635040019?view=mTeam&view=mMatchup&view=mStandings&view=mSettings";
+
+const ESPN_TEAM_FALLBACK = [
+  { id: 1, abbrev: "Joe!", name: "Bobsondinho's Revenge", owner: "Joe Berni" },
+  { id: 2, abbrev: "NEWM", name: "Big Body Newms", owner: "Ethan Newman" },
+  { id: 3, abbrev: "AAAa", name: "brazil bru h", owner: "Reid Miller" },
+  { id: 4, abbrev: "W", name: "Big Chungus", owner: "Will Dolan" },
+  { id: 5, abbrev: "BEAN", name: "Hot Dog U Bean Eaters", owner: "Gabe Gross" },
+  { id: 6, abbrev: "BALz", name: "Ball Fondilers", owner: "Tyler Buganski" },
+  { id: 7, abbrev: "UHHH", name: "Futbol Experts", owner: "Christopher Morey" },
+  { id: 8, abbrev: "MMT", name: "Autism Speaks", owner: "Michael Moen" },
+  { id: 9, abbrev: "BEN", name: "Courtland Sutton", owner: "Ben Fletcher" },
+  { id: 10, abbrev: "Nick", name: "Tung Tung Shakir", owner: "Nicholas Fletcher" },
+  { id: 11, abbrev: "MEOW", name: "It was a G.I. Jane joke", owner: "Brendan Smith" },
+  { id: 12, abbrev: ":P", name: "DeVinta Smith", owner: "Devin Kancherla" },
+  { id: 13, abbrev: "HAWK", name: "Hawk Tuah Hit Squad", owner: "Brogan Trout" },
+  { id: 14, abbrev: "Frr", name: "Free Rashee Rice", owner: "Mark Sommer" },
+  { id: 15, abbrev: "WRM", name: "wupwtw", owner: "Aaron Cole" },
+  { id: 16, abbrev: "BHG", name: "Big Hog Gabe", owner: "Gabe Kemna" },
+];
 
 const GOOGLE_SHEET_RANGES = [
   { key: "setup", sheet: "League Setup", range: "A1:F200" },
@@ -72,6 +94,211 @@ function stableHash(value) {
     hash = Math.imul(hash, 16777619);
   }
   return (hash >>> 0).toString(36);
+}
+
+function canonicalTeamMap(googleData, espnData) {
+  const fallbackById = new Map(ESPN_TEAM_FALLBACK.map((team) => [team.id, team]));
+  const liveById = new Map((espnData?.teams || []).map((team) => [team.id, team]));
+  const googleByOwner = new Map(googleData.teams.map((team) => [team.owner, team]));
+
+  return ESPN_TEAM_FALLBACK.map((fallback) => {
+    const live = liveById.get(fallback.id);
+    const google = googleByOwner.get(fallback.owner);
+    const overall = live?.record?.overall || {};
+    return {
+      team: asText(live?.name) || fallback.name,
+      owner: fallback.owner,
+      active: google?.active !== false,
+      espnTeamId: fallback.id,
+      abbreviation: asText(live?.abbrev) || fallback.abbrev,
+      pointsFor: asNumber(overall.pointsFor, asNumber(live?.points)),
+      pointsAgainst: asNumber(overall.pointsAgainst),
+      espnWins: asNumber(overall.wins),
+      espnLosses: asNumber(overall.losses),
+      espnTies: asNumber(overall.ties),
+      playoffSeed: asNumber(live?.playoffSeed, fallback.id),
+      oldTeam: google?.team || fallbackById.get(fallback.id)?.name,
+    };
+  });
+}
+
+function payoutForWeek(week) {
+  return week % 2 === 1 ? 1.88 : 1.87;
+}
+
+export function mergeEspnData(googleData, espnData = null) {
+  const teams = canonicalTeamMap(googleData, espnData);
+  const byId = new Map(teams.map((team) => [team.espnTeamId, team]));
+  const canonicalByOldName = new Map();
+  teams.forEach((team) => {
+    canonicalByOldName.set(team.oldTeam, team.team);
+    canonicalByOldName.set(ESPN_TEAM_FALLBACK.find((fallback) => fallback.id === team.espnTeamId)?.name, team.team);
+    canonicalByOldName.set(team.team, team.team);
+  });
+  const teamByOwner = new Map(teams.map((team) => [team.owner, team]));
+  const financeByWeekGame = new Map(
+    googleData.schedule.map((game) => [`${game.week}:${game.game}`, game]),
+  );
+
+  const liveSchedule = Array.isArray(espnData?.schedule) && espnData.schedule.length
+    ? [...espnData.schedule]
+        .filter((game) => asNumber(game.matchupPeriodId) <= googleData.season.regularSeasonWeeks)
+        .sort((a, b) => a.matchupPeriodId - b.matchupPeriodId || a.id - b.id)
+    : null;
+
+  const gamesPerWeek = new Map();
+  const schedule = (liveSchedule || googleData.schedule).map((sourceGame, index) => {
+    if (!liveSchedule) {
+      const awayTeam = canonicalByOldName.get(sourceGame.awayTeam) || sourceGame.awayTeam;
+      const homeTeam = canonicalByOldName.get(sourceGame.homeTeam) || sourceGame.homeTeam;
+      return {
+        ...sourceGame,
+        awayTeam,
+        homeTeam,
+        winner: canonicalByOldName.get(sourceGame.winner) || sourceGame.winner,
+        source: "google-fallback",
+      };
+    }
+
+    const week = asNumber(sourceGame.matchupPeriodId);
+    const game = (gamesPerWeek.get(week) || 0) + 1;
+    gamesPerWeek.set(week, game);
+    const manualFinance = financeByWeekGame.get(`${week}:${game}`) || {};
+    const awayTeam = byId.get(sourceGame.away?.teamId)?.team || "TBD";
+    const homeTeam = byId.get(sourceGame.home?.teamId)?.team || "TBD";
+    const winner = sourceGame.winner === "AWAY"
+      ? awayTeam
+      : sourceGame.winner === "HOME"
+        ? homeTeam
+        : null;
+    const cashPayout = winner ? payoutForWeek(week) : 0;
+    const paid = Boolean(winner && manualFinance.paid);
+    const amountPaid = paid ? roundMoney(asNumber(manualFinance.amountPaid, cashPayout)) : 0;
+
+    return {
+      matchId: asNumber(sourceGame.id, index + 1),
+      week,
+      game,
+      awayTeam,
+      homeTeam,
+      awayScore: roundMoney(asNumber(sourceGame.away?.totalPoints)),
+      homeScore: roundMoney(asNumber(sourceGame.home?.totalPoints)),
+      awayWon: sourceGame.winner === "AWAY",
+      homeWon: sourceGame.winner === "HOME",
+      winner,
+      tied: sourceGame.winner === "TIE",
+      scheduledShare: googleData.finances.exactPrizePerMatch,
+      cashPayout,
+      paid,
+      amountPaid,
+      outstanding: roundMoney(Math.max(0, cashPayout - amountPaid)),
+      notes: asText(manualFinance.notes),
+      source: "espn",
+    };
+  });
+
+  const buyIns = googleData.buyIns.map((buyIn) => {
+    const canonical = teamByOwner.get(buyIn.owner);
+    return { ...buyIn, team: canonical?.team || canonicalByOldName.get(buyIn.team) || buyIn.team };
+  });
+
+  const placements = googleData.playoffs.placements.map((placement) => ({
+    ...placement,
+    team: canonicalByOldName.get(placement.team) || placement.team,
+  }));
+  const playoffGames = googleData.playoffs.games.map((game) => ({
+    ...game,
+    teamA: canonicalByOldName.get(game.teamA) || game.teamA,
+    teamB: canonicalByOldName.get(game.teamB) || game.teamB,
+    winner: canonicalByOldName.get(game.winner) || game.winner,
+  }));
+
+  const buyInByOwner = new Map(buyIns.map((entry) => [entry.owner, entry]));
+  const placementByTeam = new Map(placements.filter((entry) => entry.team).map((entry) => [entry.team, entry]));
+  const summary = teams.map((teamEntry) => {
+    const teamGames = schedule.filter(
+      (game) => game.awayTeam === teamEntry.team || game.homeTeam === teamEntry.team,
+    );
+    const gamesPlayed = teamGames.filter((game) => game.winner || game.tied).length;
+    const regularWins = teamGames.filter((game) => game.winner === teamEntry.team).length;
+    const regularTies = teamGames.filter((game) => game.tied).length;
+    const regularLosses = Math.max(0, gamesPlayed - regularWins - regularTies);
+    const wonGames = teamGames.filter((game) => game.winner === teamEntry.team);
+    const regularSeasonEarnings = roundMoney(wonGames.reduce((sum, game) => sum + game.cashPayout, 0));
+    const regularSeasonPaid = roundMoney(wonGames.reduce((sum, game) => sum + game.amountPaid, 0));
+    const placement = placementByTeam.get(teamEntry.team);
+    const playoffPrize = roundMoney(placement?.prize ?? 0);
+    const playoffPaid = placement?.paid ? playoffPrize : 0;
+    const totalEarnings = roundMoney(regularSeasonEarnings + playoffPrize);
+    const winningsPaid = roundMoney(regularSeasonPaid + playoffPaid);
+    const buyIn = buyInByOwner.get(teamEntry.owner) || {
+      due: googleData.finances.buyInPerTeam,
+      paid: false,
+      amountCollected: 0,
+      outstanding: googleData.finances.buyInPerTeam,
+    };
+
+    return {
+      ...teamEntry,
+      buyInDue: roundMoney(buyIn.due),
+      buyInPaid: Boolean(buyIn.paid),
+      buyInCollected: roundMoney(buyIn.amountCollected),
+      buyInOutstanding: roundMoney(buyIn.outstanding),
+      gamesPlayed,
+      regularWins,
+      regularLosses,
+      regularTies,
+      regularSeasonEarnings,
+      finalPlace: placement?.place ?? null,
+      playoffPrize,
+      totalEarnings,
+      winningsPaid,
+      outstandingWinnings: roundMoney(Math.max(0, totalEarnings - winningsPaid)),
+      netAfterBuyIn: roundMoney(totalEarnings - buyIn.due),
+    };
+  });
+
+  const totalWinningsPaid = roundMoney(summary.reduce((sum, entry) => sum + entry.winningsPaid, 0));
+  const winningsOutstanding = roundMoney(summary.reduce((sum, entry) => sum + entry.outstandingWinnings, 0));
+
+  return {
+    ...googleData,
+    meta: {
+      ...googleData.meta,
+      espnLeagueUrl: ESPN_LEAGUE_URL,
+      espnLive: Boolean(espnData),
+      syncMode: espnData ? "live-google-sheets-and-espn" : "live-google-sheets-espn-fallback",
+      syncedAt: new Date().toISOString(),
+      schemaVersion: 2,
+    },
+    teams: teams.map(({ oldTeam, ...team }) => team),
+    buyIns,
+    schedule,
+    playoffs: { games: playoffGames, placements },
+    summary: summary.map(({ oldTeam, ...team }) => team),
+    finances: {
+      ...googleData.finances,
+      totalWinningsPaid,
+      winningsOutstanding,
+      leagueCashBalance: roundMoney(googleData.finances.buyInsCollected - totalWinningsPaid),
+    },
+  };
+}
+
+export async function loadEspnLeagueData() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15_000);
+  try {
+    const response = await fetch(ESPN_API_URL, { cache: "no-store", signal: controller.signal });
+    if (!response.ok) throw new Error(`ESPN returned ${response.status}.`);
+    const data = await response.json();
+    if (!Array.isArray(data.teams) || !Array.isArray(data.schedule)) {
+      throw new Error("ESPN returned incomplete league data.");
+    }
+    return data;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function tableRows(payload) {
@@ -336,12 +563,22 @@ export function parseGoogleSheetData(sourceTables) {
 }
 
 export async function loadGoogleSheetData() {
-  const loadedTables = await Promise.all(GOOGLE_SHEET_RANGES.map(loadGoogleTable));
+  const [loadedTables, espnResult] = await Promise.all([
+    Promise.all(GOOGLE_SHEET_RANGES.map(loadGoogleTable)),
+    loadEspnLeagueData().catch((error) => {
+      console.warn("ESPN data was unavailable; using the saved team-name mapping.", error);
+      return null;
+    }),
+  ]);
   const sourceTables = Object.fromEntries(
     GOOGLE_SHEET_RANGES.map((source, index) => [source.key, loadedTables[index].rows]),
   );
+  const googleData = parseGoogleSheetData(sourceTables);
+  const espnSignature = espnResult
+    ? stableHash(JSON.stringify({ teams: espnResult.teams, schedule: espnResult.schedule }))
+    : "espn-fallback";
   return {
-    data: parseGoogleSheetData(sourceTables),
-    signature: loadedTables.map((table) => table.signature).join(":"),
+    data: mergeEspnData(googleData, espnResult),
+    signature: `${loadedTables.map((table) => table.signature).join(":")}:${espnSignature}`,
   };
 }

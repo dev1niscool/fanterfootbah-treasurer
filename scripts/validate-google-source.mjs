@@ -1,6 +1,11 @@
 import fs from "node:fs/promises";
 
-import { GOOGLE_SHEET_ID, parseGoogleSheetData } from "../site/data-source.js";
+import {
+  ESPN_API_URL,
+  GOOGLE_SHEET_ID,
+  mergeEspnData,
+  parseGoogleSheetData,
+} from "../site/data-source.js";
 
 const sources = [
   { key: "setup", sheet: "League Setup", range: "A1:F200" },
@@ -31,7 +36,13 @@ async function loadRows({ sheet, range }) {
 }
 
 const loaded = await Promise.all(sources.map(loadRows));
-const data = parseGoogleSheetData(Object.fromEntries(sources.map((source, index) => [source.key, loaded[index]])));
+const googleData = parseGoogleSheetData(
+  Object.fromEntries(sources.map((source, index) => [source.key, loaded[index]])),
+);
+const espnResponse = await fetch(ESPN_API_URL, { cache: "no-store" });
+if (!espnResponse.ok) throw new Error(`ESPN returned ${espnResponse.status}.`);
+const espnData = await espnResponse.json();
+const data = mergeEspnData(googleData, espnData);
 
 if (data.teams.length !== 16) throw new Error(`Expected 16 teams; found ${data.teams.length}.`);
 if (data.buyIns.length !== data.teams.length) {
@@ -40,6 +51,16 @@ if (data.buyIns.length !== data.teams.length) {
 if (data.schedule.length !== 112) throw new Error(`Expected 112 matchups; found ${data.schedule.length}.`);
 if (data.playoffs.placements.length !== 3) {
   throw new Error(`Expected 3 playoff placements; found ${data.playoffs.placements.length}.`);
+}
+if (!data.meta.espnLive) throw new Error("Expected ESPN to be the live competition source.");
+if (!data.teams.some((team) => team.owner === "Joe Berni" && team.team === "Bobsondinho's Revenge")) {
+  throw new Error("Joe Berni was not matched to the current ESPN team name.");
+}
+if (!data.teams.some((team) => team.owner === "Christopher Morey" && team.team === "Futbol Experts")) {
+  throw new Error("Christopher Morey was not matched to the ESPN team.");
+}
+if (!data.schedule.every((game) => game.source === "espn")) {
+  throw new Error("Expected every regular-season matchup to come from ESPN.");
 }
 
 if (process.argv.includes("--write")) {
@@ -51,6 +72,8 @@ console.log(
   JSON.stringify(
     {
       source: data.meta.sourceUrl,
+      competitionSource: data.meta.espnLeagueUrl,
+      espnLive: data.meta.espnLive,
       teams: data.teams.length,
       paidTeams: data.finances.teamsPaid,
       buyInsOutstanding: data.finances.buyInsOutstanding,
