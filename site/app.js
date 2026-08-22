@@ -1,4 +1,6 @@
 const DATA_URL = "./data/league.json";
+const UPDATE_CHECK_INTERVAL_MS = 60_000;
+const OWNER_STORAGE_KEY = "fanterfootbah-owner";
 
 const state = {
   data: null,
@@ -113,12 +115,13 @@ function renderSync() {
   const { syncedAt, syncMode } = state.data.meta;
   const syncedDate = new Date(syncedAt);
   const isValid = !Number.isNaN(syncedDate.valueOf());
-  const ageHours = isValid ? (Date.now() - syncedDate.valueOf()) / 3_600_000 : 0;
+  const ageMinutes = isValid ? (Date.now() - syncedDate.valueOf()) / 60_000 : 0;
   const label = isValid ? `Synced ${dateTime.format(syncedDate)}` : "Workbook snapshot loaded";
-  $("#sync-label").textContent = ageHours < 24 ? "Workbook synced" : "Snapshot loaded";
-  $("#sync-pill").title = label;
-  $("#sync-pill").classList.toggle("is-stale", ageHours >= 24);
-  $("#footer-sync").textContent = `${label}${syncMode === "snapshot" ? " · automatic refresh configured" : ""}`;
+  const isStale = ageMinutes >= 20;
+  $("#sync-label").textContent = isStale ? "OneDrive sync delayed" : "OneDrive synced";
+  $("#sync-pill").title = `${label} · checks OneDrive every 5 minutes`;
+  $("#sync-pill").classList.toggle("is-stale", isStale);
+  $("#footer-sync").textContent = `${label} · automatic OneDrive pull every 5 minutes${syncMode === "snapshot" ? " · awaiting first automated pull" : ""}`;
 }
 
 function renderHero() {
@@ -480,7 +483,15 @@ function renderLocker() {
     "beforeend",
     owners.map((team) => `<option value="${escapeHtml(team.owner)}">${escapeHtml(team.owner)}</option>`).join(""),
   );
-  $("#owner-select").addEventListener("change", (event) => renderLockerForOwner(event.target.value));
+  const savedOwner = sessionStorage.getItem(OWNER_STORAGE_KEY);
+  if (savedOwner && owners.some((team) => team.owner === savedOwner)) {
+    $("#owner-select").value = savedOwner;
+    renderLockerForOwner(savedOwner);
+  }
+  $("#owner-select").addEventListener("change", (event) => {
+    sessionStorage.setItem(OWNER_STORAGE_KEY, event.target.value);
+    renderLockerForOwner(event.target.value);
+  });
 }
 
 function validateData(data) {
@@ -493,7 +504,7 @@ function validateData(data) {
 async function init() {
   setupTabs();
   try {
-    const response = await fetch(DATA_URL, { cache: "no-store" });
+    const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: "no-store" });
     if (!response.ok) throw new Error(`Data request failed (${response.status})`);
     state.data = validateData(await response.json());
     renderSync();
@@ -503,12 +514,39 @@ async function init() {
     renderSchedule();
     renderPlayoffs();
     renderLocker();
+    startUpdateChecks();
   } catch (error) {
     console.error(error);
     $("#sync-label").textContent = "Data unavailable";
     $("#footer-sync").textContent = "The workbook snapshot could not be loaded.";
     showToast("The league data did not load. Refresh the page or open the workbook directly.");
   }
+}
+
+function startUpdateChecks() {
+  let checking = false;
+
+  const checkForUpdate = async () => {
+    if (checking || document.hidden) return;
+    checking = true;
+    try {
+      const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) return;
+      const latest = validateData(await response.json());
+      if (latest.meta?.syncedAt && latest.meta.syncedAt !== state.data.meta?.syncedAt) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.warn("The automatic data check could not complete.", error);
+    } finally {
+      checking = false;
+    }
+  };
+
+  window.setInterval(checkForUpdate, UPDATE_CHECK_INTERVAL_MS);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) checkForUpdate();
+  });
 }
 
 init();

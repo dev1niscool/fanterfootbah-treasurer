@@ -10,7 +10,9 @@ A polished, mobile-friendly dashboard for the FanterFootbah fantasy football lea
 
 ## Data refresh
 
-The committed `site/data/league.json` file is a working snapshot. The GitHub Pages workflow opens the public OneDrive workbook, downloads a fresh copy, rebuilds the JSON, and deploys the site every 30 minutes. If OneDrive is temporarily unavailable, the last committed snapshot still deploys.
+The committed `site/data/league.json` file is a working snapshot. The GitHub Pages workflow opens the shared OneDrive workbook, downloads a fresh copy, rebuilds the JSON, and deploys the site every five minutes. Open dashboard tabs check for a newly deployed workbook every minute and reload automatically when fresh data arrives. If OneDrive is temporarily unavailable, the last committed snapshot still deploys.
+
+The ESPN league is private, so ESPN's public API does not expose its standings or matchups without a member's session credentials. Those credentials are intentionally never placed in this public site. If the league is made publicly viewable later, ESPN data can be layered in without exposing an account.
 
 To rebuild from a local workbook:
 
