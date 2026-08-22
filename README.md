@@ -8,24 +8,23 @@ A polished, mobile-friendly dashboard for the FanterFootbah fantasy football lea
 - Playoff bracket and prize podium
 - A personal “My Locker” view for each owner
 
-## Data refresh
+## Live data
 
-The committed `site/data/league.json` file is a working snapshot. The GitHub Pages workflow opens the shared OneDrive workbook, downloads a fresh copy, rebuilds the JSON, and deploys the site every five minutes. Open dashboard tabs check for a newly deployed workbook every minute and reload automatically when fresh data arrives. If OneDrive is temporarily unavailable, the last committed snapshot still deploys.
+The dashboard loads directly from the public, read-only Google Sheet using Google Visualization responses. It checks the source once per minute while open and reloads automatically when the spreadsheet changes. The committed `site/data/league.json` file remains a working fallback if Google Sheets is temporarily unavailable.
 
-The ESPN league is private, so ESPN's public API does not expose its standings or matchups without a member's session credentials. Those credentials are intentionally never placed in this public site. If the league is made publicly viewable later, ESPN data can be layered in without exposing an account.
+The ESPN league is private, so ESPN's public API does not expose its standings or matchups without a member's session credentials. Those credentials are intentionally never placed in this public site.
 
-To rebuild from a local workbook:
+Validate the live Google Sheets source:
 
 ```bash
 npm install
-npm run refresh-data:local
+npm run validate-google-source
 ```
 
-To refresh from OneDrive, install Playwright's Chromium browser once and run:
+Refresh the committed backup snapshot:
 
 ```bash
-npx playwright install chromium
-npm run refresh-data
+npm run refresh-google-snapshot
 ```
 
 ## Local preview

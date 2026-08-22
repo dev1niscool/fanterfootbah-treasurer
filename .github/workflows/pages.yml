@@ -1,10 +1,8 @@
-name: Refresh league data and deploy Pages
+name: Deploy FanterFootbah Pages
 
 on:
   push:
     branches: [main]
-  schedule:
-    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -22,20 +20,6 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-
-      - name: Install refresh dependencies
-        run: npx --yes pnpm@11.19.0 install --frozen-lockfile
-
-      - name: Pull the latest shared workbook
-        continue-on-error: true
-        env:
-          PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: /usr/bin/google-chrome
-        run: node scripts/refresh-data.mjs
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

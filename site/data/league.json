@@ -1,10 +1,10 @@
 {
   "meta": {
     "leagueName": "FanterFootbah",
-    "sourceUrl": "https://1drv.ms/x/c/8420cee342e1f353/IQA9HFrbvWfhS5oYN7S5h8lnAQOXX5uVZ_3CFWdYeMBHte8",
-    "workbookName": "Fantasy_Football_Treasurer_Tracker.xlsx",
-    "syncedAt": "2026-08-22T22:01:47.258Z",
-    "syncMode": "automated",
+    "sourceUrl": "https://docs.google.com/spreadsheets/d/1NtRDgw3Jzo5HtB4zU-lnx5niiFDKfPLJww4ToEjqsHg/edit?usp=sharing",
+    "workbookName": "FanterFootbah Treasurer Tracker",
+    "syncedAt": "2026-08-22T22:54:59.406Z",
+    "syncMode": "live-google-sheets",
     "schemaVersion": 1
   },
   "season": {

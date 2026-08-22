@@ -6,7 +6,9 @@
   "packageManager": "pnpm@11.19.0",
   "scripts": {
     "refresh-data": "node scripts/refresh-data.mjs",
-    "refresh-data:local": "node scripts/refresh-data.mjs --workbook /Users/devin/Downloads/Fantasy_Football_Treasurer_Tracker_v4.xlsx"
+    "refresh-data:local": "node scripts/refresh-data.mjs --workbook /Users/devin/Downloads/Fantasy_Football_Treasurer_Tracker_v4.xlsx",
+    "refresh-google-snapshot": "node scripts/validate-google-source.mjs --write",
+    "validate-google-source": "node scripts/validate-google-source.mjs"
   },
   "dependencies": {
     "playwright": "^1.55.0",

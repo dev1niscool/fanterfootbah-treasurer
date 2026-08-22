@@ -1,3 +1,5 @@
+import { loadGoogleSheetData } from "./data-source.js";
+
 const DATA_URL = "./data/league.json";
 const UPDATE_CHECK_INTERVAL_MS = 60_000;
 const OWNER_STORAGE_KEY = "fanterfootbah-owner";
@@ -5,6 +7,8 @@ const OWNER_STORAGE_KEY = "fanterfootbah-owner";
 const state = {
   data: null,
   activeTab: "overview",
+  sourceSignature: null,
+  usingLiveData: false,
 };
 
 const money = new Intl.NumberFormat("en-US", {
@@ -112,16 +116,24 @@ function setupTabs() {
 }
 
 function renderSync() {
-  const { syncedAt, syncMode } = state.data.meta;
+  const { syncedAt } = state.data.meta;
   const syncedDate = new Date(syncedAt);
   const isValid = !Number.isNaN(syncedDate.valueOf());
-  const ageMinutes = isValid ? (Date.now() - syncedDate.valueOf()) / 60_000 : 0;
+
+  if (state.usingLiveData) {
+    const label = isValid ? `Loaded from Google Sheets ${dateTime.format(syncedDate)}` : "Loaded from Google Sheets";
+    $("#sync-label").textContent = "Google Sheets live";
+    $("#sync-pill").title = `${label} · checks for edits every minute`;
+    $("#sync-pill").classList.remove("is-stale");
+    $("#footer-sync").textContent = `${label} · automatic update checks every minute`;
+    return;
+  }
+
   const label = isValid ? `Synced ${dateTime.format(syncedDate)}` : "Workbook snapshot loaded";
-  const isStale = ageMinutes >= 20;
-  $("#sync-label").textContent = isStale ? "OneDrive sync delayed" : "OneDrive synced";
-  $("#sync-pill").title = `${label} · checks OneDrive every 5 minutes`;
-  $("#sync-pill").classList.toggle("is-stale", isStale);
-  $("#footer-sync").textContent = `${label} · automatic OneDrive pull every 5 minutes${syncMode === "snapshot" ? " · awaiting first automated pull" : ""}`;
+  $("#sync-label").textContent = "Backup snapshot";
+  $("#sync-pill").title = `${label} · the live Google Sheet could not be reached`;
+  $("#sync-pill").classList.add("is-stale");
+  $("#footer-sync").textContent = `${label} · showing the saved backup`;
 }
 
 function renderHero() {
@@ -504,9 +516,19 @@ function validateData(data) {
 async function init() {
   setupTabs();
   try {
-    const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: "no-store" });
-    if (!response.ok) throw new Error(`Data request failed (${response.status})`);
-    state.data = validateData(await response.json());
+    try {
+      const live = await loadGoogleSheetData();
+      state.data = validateData(live.data);
+      state.sourceSignature = live.signature;
+      state.usingLiveData = true;
+    } catch (liveError) {
+      console.warn("Live Google Sheets data was unavailable; loading the backup snapshot.", liveError);
+      const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) throw new Error(`Backup data request failed (${response.status})`);
+      state.data = validateData(await response.json());
+      state.usingLiveData = false;
+      showToast("Google Sheets is temporarily unavailable. Showing the latest saved backup.");
+    }
     renderSync();
     renderHero();
     renderOverview();
@@ -518,8 +540,8 @@ async function init() {
   } catch (error) {
     console.error(error);
     $("#sync-label").textContent = "Data unavailable";
-    $("#footer-sync").textContent = "The workbook snapshot could not be loaded.";
-    showToast("The league data did not load. Refresh the page or open the workbook directly.");
+    $("#footer-sync").textContent = "The league tracker could not be loaded.";
+    showToast("The league data did not load. Refresh the page or open the Google Sheet directly.");
   }
 }
 
@@ -530,10 +552,8 @@ function startUpdateChecks() {
     if (checking || document.hidden) return;
     checking = true;
     try {
-      const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: "no-store" });
-      if (!response.ok) return;
-      const latest = validateData(await response.json());
-      if (latest.meta?.syncedAt && latest.meta.syncedAt !== state.data.meta?.syncedAt) {
+      const latest = await loadGoogleSheetData();
+      if (!state.usingLiveData || latest.signature !== state.sourceSignature) {
         window.location.reload();
       }
     } catch (error) {
