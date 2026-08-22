@@ -53,6 +53,15 @@ function formatPoints(value) {
   return decimal.format(Number(value) || 0);
 }
 
+function formatPreciseMoney(value) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 3,
+  }).format(Number(value) || 0);
+}
+
 function initials(value = "") {
   const words = value.trim().split(/\s+/).filter(Boolean);
   if (!words.length) return "FF";
@@ -110,6 +119,7 @@ function setTab(tabName, { updateHash = true, focus = false } = {}) {
 
   if (updateHash) history.replaceState(null, "", `#${resolvedTab}`);
   if (focus) $(`#${resolvedTab}`)?.focus({ preventScroll: true });
+  if (state.data && resolvedTab === "pot-split") renderPotSplit({ animate: true });
 }
 
 function setupTabs() {
@@ -212,27 +222,6 @@ function renderOverview() {
           <td>${formatPoints(team.pointsFor)}</td>
           <td class="${moneyClass(earnings)}">${formatMoney(earnings)}</td>
         </tr>
-      `;
-    })
-    .join("");
-
-  $("#earnings-race-heading").textContent = state.includeBuyIn ? "Net earnings race" : "Earnings race";
-  const topSix = standings.slice(0, 6);
-  const maxMagnitude = Math.max(1, ...topSix.map((team) => Math.abs(displayEarnings(team))));
-  $("#earnings-race").innerHTML = topSix
-    .map((team, index) => {
-      const value = displayEarnings(team);
-      const width = value === 0 ? 3 : Math.max(12, (Math.abs(value) / maxMagnitude) * 100);
-      return `
-        <div class="earnings-bar-row${team.owner === state.activeOwner ? " is-you" : ""}">
-          <div class="earnings-bar-label">
-            <span><b>${index + 1}</b> ${escapeHtml(team.abbreviation || initials(team.team))}</span>
-            <strong class="${moneyClass(value)}">${formatMoney(value)}</strong>
-          </div>
-          <div class="earnings-bar-track">
-            <span class="${value < 0 ? "is-negative" : ""}" style="width: ${width}%"></span>
-          </div>
-        </div>
       `;
     })
     .join("");
@@ -365,15 +354,21 @@ function matchupTeam(team, winner, score, showScore) {
 function renderScheduleWeek(week) {
   const games = state.data.schedule.filter((game) => game.week === Number(week));
   const decided = games.filter((game) => game.winner || game.tied).length;
+  const paidPayouts = games.filter((game) => game.paid).length;
   const payout = games.reduce((sum, game) => sum + game.cashPayout, 0);
   $("#week-summary").innerHTML = `
     <span><strong>Week ${week}</strong> · ${decided} of ${games.length} ESPN results final</span>
-    <span>${formatMoney(payout)} earned this week</span>
+    <span>${formatMoney(payout)} earned · ${paidPayouts} payout${paidPayouts === 1 ? "" : "s"} paid</span>
   `;
 
   $("#matchup-grid").innerHTML = games
     .map((game) => {
       const hasScore = game.winner || game.tied || game.awayScore > 0 || game.homeScore > 0;
+      const payoutStatus = game.winner
+        ? game.paid
+          ? `${formatMoney(game.amountPaid)} paid ✓`
+          : `${formatMoney(game.cashPayout)} not paid`
+        : "Pending result";
       return `
         <article class="matchup-card">
           <div class="matchup-card-header">
@@ -385,8 +380,11 @@ function renderScheduleWeek(week) {
             ${matchupTeam(game.homeTeam, game.winner, game.homeScore, hasScore)}
           </div>
           <div class="matchup-card-footer">
-            <span>${game.winner ? `${formatMoney(game.cashPayout)} earned` : `${formatMoney(game.scheduledShare)} share`}</span>
-            <span class="${game.paid ? "paid-copy" : ""}">${game.paid ? "Paid ✓" : game.winner ? "Payment due" : "ESPN live"}</span>
+            <span>${game.winner ? `${escapeHtml(game.winner)} won` : `${formatMoney(game.scheduledShare)} prize`}</span>
+            <span class="payout-status${game.paid ? " is-paid" : game.winner ? " is-due" : ""}">
+              <small>Sheet payout</small>
+              <b>${payoutStatus}</b>
+            </span>
           </div>
         </article>
       `;
@@ -463,6 +461,83 @@ function renderPlayoffs() {
         .join("")}
     </div>
   `;
+}
+
+function renderPotSplit({ animate = false } = {}) {
+  const root = $("#pot-split-content");
+  if (!root) return;
+  const { finances, playoffs, season } = state.data;
+  const totalPot = finances.totalPot || 0;
+  const regularPercent = totalPot ? (finances.regularSeasonPool / totalPot) * 100 : 0;
+  const playoffPercent = totalPot ? (finances.playoffPrizePool / totalPot) * 100 : 0;
+  const weeklyPot = season.regularSeasonWeeks
+    ? finances.regularSeasonPool / season.regularSeasonWeeks
+    : 0;
+  const perWin = season.matchesPerWeek ? weeklyPot / season.matchesPerWeek : 0;
+  const placements = [...playoffs.placements].sort((a, b) => a.place - b.place);
+  const placeLabels = { 1: "1st place", 2: "2nd place", 3: "3rd place" };
+  const maxPrize = Math.max(1, ...placements.map((placement) => placement.prize));
+
+  root.innerHTML = `
+    <div class="pot-overview-grid">
+      <article class="panel pot-total-panel">
+        <div class="pot-ring" style="--regular-angle: ${regularPercent}%">
+          <div><strong>${formatMoney(totalPot)}</strong><small>Total league pot</small></div>
+        </div>
+        <div class="pot-legend">
+          <div><span class="pot-swatch is-regular"></span><p>Regular-season wins<small>${regularPercent.toFixed(2)}% of the pot</small></p><strong>${formatMoney(finances.regularSeasonPool)}</strong></div>
+          <div><span class="pot-swatch is-playoffs"></span><p>Top-three finishers<small>${playoffPercent.toFixed(2)}% of the pot</small></p><strong>${formatMoney(finances.playoffPrizePool)}</strong></div>
+        </div>
+      </article>
+
+      <article class="panel podium-split-panel">
+        <div class="panel-heading">
+          <div><p class="panel-kicker">Playoff pool · ${formatMoney(finances.playoffPrizePool)}</p><h3>Season finish prizes</h3></div>
+        </div>
+        <div class="prize-bars">
+          ${placements
+            .map((placement, index) => {
+              const playoffShare = finances.playoffPrizePool
+                ? (placement.prize / finances.playoffPrizePool) * 100
+                : 0;
+              return `
+                <div class="prize-bar-row" style="--delay: ${index * 110}ms">
+                  <div><span class="place-medal is-place-${placement.place}">${placement.place}</span><strong>${placeLabels[placement.place] || `#${placement.place}`}</strong><small>${playoffShare.toFixed(1)}% of the playoff pool</small></div>
+                  <div class="prize-bar-track"><span style="width: ${(placement.prize / maxPrize) * 100}%"></span></div>
+                  <b>${formatMoney(placement.prize)}</b>
+                </div>
+              `;
+            })
+            .join("")}
+        </div>
+      </article>
+    </div>
+
+    <article class="panel weekly-waterfall">
+      <div class="panel-heading">
+        <div><p class="panel-kicker">Regular-season pool · ${formatMoney(finances.regularSeasonPool)}</p><h3>From the season to one matchup win</h3></div>
+      </div>
+      <div class="waterfall-steps">
+        <div class="waterfall-step" style="--delay: 80ms">
+          <span>Season</span><strong>${formatMoney(finances.regularSeasonPool)}</strong><small>Reserved for weekly wins</small>
+        </div>
+        <span class="waterfall-operator" aria-hidden="true">÷</span>
+        <div class="waterfall-step" style="--delay: 200ms">
+          <span>${season.regularSeasonWeeks} weeks</span><strong>${formatMoney(weeklyPot)}</strong><small>Available each week</small>
+        </div>
+        <span class="waterfall-operator" aria-hidden="true">÷</span>
+        <div class="waterfall-step is-final" style="--delay: 320ms">
+          <span>${season.matchesPerWeek} winners</span><strong>${formatPreciseMoney(perWin)}</strong><small>Exact share per win</small>
+        </div>
+      </div>
+      <p class="rounding-note"><span aria-hidden="true">↳</span> Cash payouts alternate between <strong>$1.88</strong> and <strong>$1.87</strong> so all ${season.regularSeasonWeeks * season.matchesPerWeek} wins add up to exactly ${formatMoney(finances.regularSeasonPool)}.</p>
+    </article>
+  `;
+
+  root.classList.remove("is-animated");
+  if (animate) {
+    requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add("is-animated")));
+  }
 }
 
 function renderLockerForOwner(owner) {
@@ -592,7 +667,6 @@ function showWelcomeGate({ switcher = false } = {}) {
   document.body.classList.add("is-signing-in");
   $(".page-shell").inert = true;
   $(".page-shell").setAttribute("aria-hidden", "true");
-  $("#include-buyin-toggle").closest(".buyin-toggle").hidden = true;
   if (state.activeOwner) {
     $("#signin-owner-select").value = state.activeOwner;
     $("#enter-dashboard").disabled = false;
@@ -605,7 +679,6 @@ function closeWelcomeGate() {
   document.body.classList.remove("is-signing-in");
   $(".page-shell").inert = false;
   $(".page-shell").removeAttribute("aria-hidden");
-  $("#include-buyin-toggle").closest(".buyin-toggle").hidden = false;
   $("#main").focus({ preventScroll: true });
 }
 
@@ -646,6 +719,7 @@ function setupControls() {
   $("#switch-owner").addEventListener("click", () => showWelcomeGate({ switcher: true }));
   $("#include-buyin-toggle").addEventListener("change", (event) => {
     state.includeBuyIn = event.target.checked;
+    $("#buyin-mode-label").textContent = state.includeBuyIn ? "Buy-in included" : "Buy-in excluded";
     renderPersonalizedViews();
     showToast(state.includeBuyIn ? "Buy-in is now included in earnings." : "Buy-in removed. Earnings start at $0.");
   });
@@ -679,6 +753,7 @@ async function init() {
     renderSync();
     renderSchedule();
     renderPlayoffs();
+    renderPotSplit({ animate: state.activeTab === "pot-split" });
     setupOwnerExperience();
     if (!state.activeOwner) {
       renderOverview();

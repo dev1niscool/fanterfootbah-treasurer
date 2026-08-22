@@ -62,6 +62,15 @@ if (!data.teams.some((team) => team.owner === "Christopher Morey" && team.team =
 if (!data.schedule.every((game) => game.source === "espn")) {
   throw new Error("Expected every regular-season matchup to come from ESPN.");
 }
+const playoffPrizeTotal = data.playoffs.placements.reduce((sum, placement) => sum + placement.prize, 0);
+if (Math.abs(playoffPrizeTotal - data.finances.playoffPrizePool) > 0.001) {
+  throw new Error("Playoff placements do not add up to the playoff prize pool.");
+}
+const regularSeasonMath =
+  data.season.regularSeasonWeeks * data.season.matchesPerWeek * data.finances.exactPrizePerMatch;
+if (Math.abs(regularSeasonMath - data.finances.regularSeasonPool) > 0.001) {
+  throw new Error("Weekly matchup shares do not add up to the regular-season pool.");
+}
 
 if (process.argv.includes("--write")) {
   const destination = new URL("../site/data/league.json", import.meta.url);
@@ -79,6 +88,8 @@ console.log(
       buyInsOutstanding: data.finances.buyInsOutstanding,
       matchups: data.schedule.length,
       playoffPlacements: data.playoffs.placements.length,
+      playoffPrizeTotal,
+      regularSeasonMath,
       totalPot: data.finances.totalPot,
       snapshotWritten: process.argv.includes("--write"),
     },

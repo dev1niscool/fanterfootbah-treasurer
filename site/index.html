@@ -100,6 +100,9 @@
             <button class="tab-button" id="tab-playoffs" role="tab" aria-selected="false" aria-controls="playoffs" data-tab="playoffs">
               Playoffs
             </button>
+            <button class="tab-button" id="tab-pot-split" role="tab" aria-selected="false" aria-controls="pot-split" data-tab="pot-split">
+              Pot Split
+            </button>
             <button class="tab-button tab-personal" id="tab-my-locker" role="tab" aria-selected="false" aria-controls="my-locker" data-tab="my-locker">
               <span aria-hidden="true">✦</span> My Locker
             </button>
@@ -113,44 +116,31 @@
                 <p class="eyebrow">Competition board</p>
                 <h2>Race for the cash</h2>
               </div>
-              <p>Weekly wins, earnings, and bragging rights—live from ESPN.</p>
             </div>
 
-            <div class="competition-grid">
-              <article class="panel panel-wide">
-                <div class="panel-heading">
-                  <div>
-                    <p class="panel-kicker">Show me the money</p>
-                    <h3>Earnings leaderboard</h3>
-                  </div>
-                  <button class="text-button" type="button" data-jump-tab="teams">All teams →</button>
+            <article class="panel panel-wide">
+              <div class="panel-heading">
+                <div>
+                  <p class="panel-kicker">Show me the money</p>
+                  <h3>Earnings leaderboard</h3>
                 </div>
-                <div class="table-wrap">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th scope="col">Rank</th>
-                        <th scope="col">Team</th>
-                        <th scope="col">Wins</th>
-                        <th scope="col">ESPN pts</th>
-                        <th scope="col" id="leaderboard-money-heading">Earnings</th>
-                      </tr>
-                    </thead>
-                    <tbody id="leaderboard-body"></tbody>
-                  </table>
-                </div>
-              </article>
-
-              <article class="panel earnings-race-panel">
-                <div class="panel-heading">
-                  <div>
-                    <p class="panel-kicker">Top six</p>
-                    <h3 id="earnings-race-heading">Earnings race</h3>
-                  </div>
-                </div>
-                <div class="earnings-bars" id="earnings-race"></div>
-              </article>
-            </div>
+                <button class="text-button" type="button" data-jump-tab="teams">All teams →</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">Rank</th>
+                      <th scope="col">Team</th>
+                      <th scope="col">Wins</th>
+                      <th scope="col">ESPN pts</th>
+                      <th scope="col" id="leaderboard-money-heading">Earnings</th>
+                    </tr>
+                  </thead>
+                  <tbody id="leaderboard-body"></tbody>
+                </table>
+              </div>
+            </article>
 
             <div class="fun-stat-grid" id="fun-stats"></div>
 
@@ -212,6 +202,16 @@
             </div>
           </section>
 
+          <section class="tab-panel" id="pot-split" role="tabpanel" aria-labelledby="tab-pot-split" tabindex="0" hidden>
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Follow every dollar</p>
+                <h2>How the pot gets divided</h2>
+              </div>
+            </div>
+            <div id="pot-split-content"></div>
+          </section>
+
           <section class="tab-panel" id="my-locker" role="tabpanel" aria-labelledby="tab-my-locker" tabindex="0" hidden>
             <div class="locker-intro">
               <div>
@@ -248,7 +248,10 @@
     <label class="buyin-toggle" title="Subtract the $30 entry fee from earnings everywhere">
       <input id="include-buyin-toggle" type="checkbox" />
       <span class="toggle-box" aria-hidden="true">✓</span>
-      <span>Include buy-in</span>
+      <span class="buyin-toggle-copy">
+        <strong id="buyin-mode-label">Buy-in excluded</strong>
+        <small>Show net earnings</small>
+      </span>
     </label>
 
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
