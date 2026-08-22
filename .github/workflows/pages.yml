@@ -33,9 +33,9 @@ jobs:
 
       - name: Pull the latest shared workbook
         continue-on-error: true
-        run: |
-          npx playwright install --with-deps chromium
-          npm run refresh-data
+        env:
+          PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: /usr/bin/google-chrome
+        run: node scripts/refresh-data.mjs
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
