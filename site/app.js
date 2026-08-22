@@ -521,11 +521,11 @@ function renderPotSplit({ animate = false } = {}) {
         <div class="waterfall-step" style="--delay: 80ms">
           <span>Season</span><strong>${formatMoney(finances.regularSeasonPool)}</strong><small>Reserved for weekly wins</small>
         </div>
-        <span class="waterfall-operator" aria-hidden="true">÷</span>
+        <span class="waterfall-operator" aria-hidden="true">→</span>
         <div class="waterfall-step" style="--delay: 200ms">
           <span>${season.regularSeasonWeeks} weeks</span><strong>${formatMoney(weeklyPot)}</strong><small>Available each week</small>
         </div>
-        <span class="waterfall-operator" aria-hidden="true">÷</span>
+        <span class="waterfall-operator" aria-hidden="true">→</span>
         <div class="waterfall-step is-final" style="--delay: 320ms">
           <span>${season.matchesPerWeek} winners</span><strong>${formatPreciseMoney(perWin)}</strong><small>Exact share per win</small>
         </div>
