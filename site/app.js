@@ -541,13 +541,12 @@ function renderPotSplit({ animate = false } = {}) {
 }
 
 function renderLockerForOwner(owner) {
-  const empty = $("#locker-empty");
   const results = $("#locker-results");
   const team = state.data.summary.find((item) => item.owner === owner);
 
   if (!team) {
-    empty.hidden = false;
     results.hidden = true;
+    results.innerHTML = "";
     return;
   }
 
@@ -640,7 +639,6 @@ function renderLockerForOwner(owner) {
     </div>
   `;
 
-  empty.hidden = true;
   results.hidden = false;
 }
 
