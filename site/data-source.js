@@ -96,6 +96,17 @@ function stableHash(value) {
   return (hash >>> 0).toString(36);
 }
 
+function safeImageUrl(value) {
+  const text = asText(value);
+  if (!text) return null;
+  try {
+    const url = new URL(text);
+    return url.protocol === "https:" ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+
 function canonicalTeamMap(googleData, espnData) {
   const fallbackById = new Map(ESPN_TEAM_FALLBACK.map((team) => [team.id, team]));
   const liveById = new Map((espnData?.teams || []).map((team) => [team.id, team]));
@@ -111,6 +122,8 @@ function canonicalTeamMap(googleData, espnData) {
       active: google?.active !== false,
       espnTeamId: fallback.id,
       abbreviation: asText(live?.abbrev) || fallback.abbrev,
+      logo: safeImageUrl(live?.logo) || safeImageUrl(google?.logo),
+      logoType: asText(live?.logoType) || asText(google?.logoType) || null,
       pointsFor: asNumber(overall.pointsFor, asNumber(live?.points)),
       pointsAgainst: asNumber(overall.pointsAgainst),
       espnWins: asNumber(overall.wins),

@@ -59,6 +59,9 @@ if (!data.teams.some((team) => team.owner === "Joe Berni" && team.team === "Bobs
 if (!data.teams.some((team) => team.owner === "Christopher Morey" && team.team === "Futbol Experts")) {
   throw new Error("Christopher Morey was not matched to the ESPN team.");
 }
+if (!data.teams.every((team) => team.logo?.startsWith("https://") && team.logoType)) {
+  throw new Error("Expected every ESPN team to include a secure logo and logo type.");
+}
 if (!data.schedule.every((game) => game.source === "espn")) {
   throw new Error("Expected every regular-season matchup to come from ESPN.");
 }
@@ -84,6 +87,7 @@ console.log(
       competitionSource: data.meta.espnLeagueUrl,
       espnLive: data.meta.espnLive,
       teams: data.teams.length,
+      teamLogos: data.teams.filter((team) => team.logo).length,
       paidTeams: data.finances.teamsPaid,
       buyInsOutstanding: data.finances.buyInsOutstanding,
       matchups: data.schedule.length,

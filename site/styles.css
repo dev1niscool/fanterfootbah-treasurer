@@ -663,10 +663,12 @@ td {
 }
 
 .avatar {
+  position: relative;
   display: grid;
   flex: 0 0 auto;
   width: 38px;
   height: 38px;
+  overflow: hidden;
   place-items: center;
   border: 1px solid rgba(47, 125, 82, 0.12);
   border-radius: 12px;
@@ -674,6 +676,37 @@ td {
   background: linear-gradient(145deg, #e6f6ea, #d2ecd9);
   font-size: 11px;
   font-weight: 900;
+}
+
+.avatar-fallback {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+}
+
+.team-avatar-image {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 2px;
+  object-fit: contain;
+  border-radius: inherit;
+  background: white;
+}
+
+.team-avatar-image.is-custom {
+  padding: 0;
+  object-fit: cover;
+}
+
+.team-avatar-image[hidden] {
+  display: none;
 }
 
 .rank {
@@ -1328,6 +1361,24 @@ td {
   letter-spacing: -0.08em;
 }
 
+.profile-avatar {
+  width: 78px;
+  height: 78px;
+  border-color: rgba(255, 255, 255, 0.2);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
+.profile-avatar .avatar-fallback {
+  color: white;
+  font-size: 19px;
+}
+
+.profile-card .profile-avatar + h3 {
+  margin-top: 26px;
+}
+
 .profile-card h3 {
   position: relative;
   z-index: 1;
@@ -1844,14 +1895,24 @@ body.is-booting .buyin-toggle {
 }
 
 .owner-chip > span:first-child {
+  position: relative;
   display: grid;
   width: 28px;
   height: 28px;
+  overflow: hidden;
   place-items: center;
   border-radius: 50%;
   color: white;
   background: var(--green);
   font-size: 9px;
+}
+
+#header-owner-initials .team-avatar-image {
+  padding: 1px;
+}
+
+#header-owner-initials .team-avatar-image.is-custom {
+  padding: 0;
 }
 
 .quick-strip {

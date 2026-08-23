@@ -69,6 +69,28 @@ function initials(value = "") {
   return `${words[0][0]}${words.at(-1)[0]}`.toUpperCase();
 }
 
+function teamForName(teamName) {
+  return state.data?.summary.find((team) => team.team === teamName) || null;
+}
+
+function teamLogoContents(team, { eager = false } = {}) {
+  const name = team?.team || "FanterFootbah";
+  const fallback = `<span class="avatar-fallback">${initials(name)}</span>`;
+  if (!team?.logo) return fallback;
+  const customClass = team.logoType?.includes("CUSTOM") ? " is-custom" : "";
+  return `${fallback}<img class="team-avatar-image${customClass}" src="${escapeHtml(team.logo)}" alt="" ${
+    eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'
+  } decoding="async" />`;
+}
+
+function teamAvatar(teamOrName, extraClass = "") {
+  const team = typeof teamOrName === "string" ? teamForName(teamOrName) : teamOrName;
+  const name = team?.team || String(teamOrName || "");
+  return `<span class="avatar team-avatar${extraClass ? ` ${extraClass}` : ""}" aria-hidden="true">${teamLogoContents(
+    team || { team: name },
+  )}</span>`;
+}
+
 function moneyClass(value) {
   if (value > 0) return "money-positive";
   if (value < 0) return "money-negative";
@@ -183,7 +205,7 @@ function renderQuickStrip() {
   $("#welcome-earnings").textContent = formatMoney(displayEarnings(team));
   $("#welcome-earnings").className = moneyClass(displayEarnings(team));
   $("#welcome-points").textContent = formatPoints(team.pointsFor);
-  $("#header-owner-initials").textContent = initials(team.owner);
+  $("#header-owner-initials").innerHTML = teamLogoContents(team, { eager: true });
   $("#header-owner-name").textContent = team.owner;
 }
 
@@ -214,7 +236,7 @@ function renderOverview() {
           <td><span class="rank${index < 3 ? " is-top" : ""}">${index + 1}</span></td>
           <td>
             <div class="team-cell">
-              <span class="avatar" aria-hidden="true">${initials(team.team)}</span>
+              ${teamAvatar(team)}
               <span>${escapeHtml(team.team)}<small>${escapeHtml(team.owner)}${team.owner === state.activeOwner ? " · You" : ""}</small></span>
             </div>
           </td>
@@ -321,7 +343,7 @@ function renderTeamCards(query = "") {
             <article class="team-card${team.owner === state.activeOwner ? " is-you" : ""}">
               <div>
                 <div class="team-card-top">
-                  <span class="avatar" aria-hidden="true">${escapeHtml(team.abbreviation || initials(team.team))}</span>
+                  ${teamAvatar(team)}
                   <span class="status-badge${team.buyInPaid ? "" : " is-due"}">
                     ${team.buyInPaid ? "Buy-in paid" : `${formatMoney(team.buyInOutstanding)} due`}
                   </span>
@@ -344,7 +366,7 @@ function renderTeamCards(query = "") {
 function matchupTeam(team, winner, score, showScore) {
   return `
     <div class="matchup-team${team && team === winner ? " is-winner" : ""}">
-      <span class="avatar" aria-hidden="true">${initials(team)}</span>
+      ${teamAvatar(team)}
       <span>${escapeHtml(team || "TBD")}</span>
       ${showScore ? `<b class="matchup-score">${formatPoints(score)}</b>` : ""}
     </div>
@@ -570,7 +592,7 @@ function renderLockerForOwner(owner) {
   results.innerHTML = `
     <div class="locker-profile">
       <article class="profile-card">
-        <span class="profile-number">${escapeHtml(team.abbreviation || initials(team.owner))}</span>
+        ${teamAvatar(team, "profile-avatar")}
         <h3>${escapeHtml(team.team)}</h3>
         <p>${escapeHtml(team.owner)}</p>
         <span class="profile-status">${escapeHtml(paymentCopy)}</span>
@@ -697,6 +719,16 @@ function setupOwnerExperience() {
 }
 
 function setupControls() {
+  document.addEventListener(
+    "error",
+    (event) => {
+      if (event.target instanceof HTMLImageElement && event.target.classList.contains("team-avatar-image")) {
+        event.target.hidden = true;
+        event.target.closest(".team-avatar")?.classList.add("image-failed");
+      }
+    },
+    true,
+  );
   $("#team-search").addEventListener("input", (event) => renderTeamCards(event.target.value));
   $("#week-select").addEventListener("change", (event) => renderScheduleWeek(event.target.value));
   $("#owner-select").addEventListener("change", (event) => {
