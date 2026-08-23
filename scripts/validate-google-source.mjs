@@ -46,8 +46,11 @@ const espnResponse = await fetch(ESPN_API_URL, {
 });
 if (!espnResponse.ok) throw new Error(`ESPN returned ${espnResponse.status}.`);
 const espnData = await espnResponse.json();
-if (!Array.isArray(espnData.transactions) || !espnData.transactions.every((transaction) => transaction.type === "WAIVER")) {
-  throw new Error("Expected ESPN to return only waiver transactions.");
+if (
+  !Array.isArray(espnData.transactions) ||
+  !espnData.transactions.every((transaction) => ["WAIVER", "FREEAGENT"].includes(transaction.type))
+) {
+  throw new Error("Expected ESPN to return only waiver and free-agent transactions.");
 }
 const data = mergeEspnData(googleData, espnData);
 
@@ -69,11 +72,36 @@ if (!data.teams.some((team) => team.owner === "Christopher Morey" && team.team =
 if (!data.teams.every((team) => team.logo?.startsWith("https://") && team.logoType)) {
   throw new Error("Expected every ESPN team to include a secure logo and logo type.");
 }
-if (!data.waivers?.available || !data.teams.every((team) => Number.isInteger(team.waiverClaims))) {
-  throw new Error("Expected ESPN waiver totals for every team.");
+if (
+  !data.waivers?.available ||
+  !data.teams.every(
+    (team) =>
+      Number.isInteger(team.waiverClaims) &&
+      Number.isInteger(team.freeAgentAdds) &&
+      team.wireAdds === team.waiverClaims + team.freeAgentAdds,
+  )
+) {
+  throw new Error("Expected ESPN waiver and free-agent totals for every team.");
 }
 if (data.waivers.totalClaims !== data.teams.reduce((sum, team) => sum + team.waiverClaims, 0)) {
   throw new Error("ESPN waiver totals do not match the team leaderboard.");
+}
+if (data.waivers.totalFreeAgentAdds !== data.teams.reduce((sum, team) => sum + team.freeAgentAdds, 0)) {
+  throw new Error("ESPN free-agent totals do not match the team leaderboard.");
+}
+if (data.waivers.totalAdds !== data.teams.reduce((sum, team) => sum + team.wireAdds, 0)) {
+  throw new Error("ESPN combined-add totals do not match the team leaderboard.");
+}
+const wireHistory2025 = data.history?.wireAdds?.[2025];
+if (!wireHistory2025 || wireHistory2025.teams.length !== 12 || wireHistory2025.totalAdds !== 271) {
+  throw new Error("Expected the complete 2025 ESPN acquisition archive.");
+}
+const wireHistory2025Bottom = [...wireHistory2025.teams]
+  .sort((a, b) => a.wireAdds - b.wireAdds || a.team.localeCompare(b.team))
+  .slice(0, 3)
+  .map((team) => team.team);
+if (wireHistory2025Bottom.join("|") !== "Big Chungus|Hot Dog U Bean Eaters|Ball Fondilers") {
+  throw new Error("The 2025 bottom-three archive is incomplete.");
 }
 if (!data.schedule.every((game) => game.source === "espn")) {
   throw new Error("Expected every regular-season matchup to come from ESPN.");
@@ -102,6 +130,9 @@ console.log(
       teams: data.teams.length,
       teamLogos: data.teams.filter((team) => team.logo).length,
       waiverClaims: data.waivers.totalClaims,
+      freeAgentAdds: data.waivers.totalFreeAgentAdds,
+      wireAdds: data.waivers.totalAdds,
+      wireAdds2025: wireHistory2025.totalAdds,
       paidTeams: data.finances.teamsPaid,
       buyInsOutstanding: data.finances.buyInsOutstanding,
       matchups: data.schedule.length,

@@ -5,7 +5,7 @@ export const ESPN_API_URL =
   "https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/2026/segments/0/leagues/635040019?view=mTeam&view=mMatchup&view=mStandings&view=mSettings&view=mTransactions2";
 export const ESPN_API_FILTER = JSON.stringify({
   transactions: {
-    filterType: { value: ["WAIVER"] },
+    filterType: { value: ["WAIVER", "FREEAGENT"] },
     limit: 1000,
     offset: 0,
     sortProcessDate: { sortPriority: 1, sortAsc: false },
@@ -29,6 +29,21 @@ const ESPN_TEAM_FALLBACK = [
   { id: 14, abbrev: "Frr", name: "Free Rashee Rice", owner: "Mark Sommer" },
   { id: 15, abbrev: "WRM", name: "wupwtw", owner: "Aaron Cole" },
   { id: 16, abbrev: "BHG", name: "Big Hog Gabe", owner: "Gabe Kemna" },
+];
+
+const ESPN_2025_WIRE_ADDS = [
+  { id: 1, team: "Hawk Invert Tetrahedron Etienne", wireAdds: 41 },
+  { id: 2, team: "Team Newman", wireAdds: 49 },
+  { id: 3, team: "brazil bru h", wireAdds: 10 },
+  { id: 4, team: "Big Chungus", wireAdds: 4 },
+  { id: 5, team: "Hot Dog U Bean Eaters", wireAdds: 5 },
+  { id: 6, team: "Ball Fondilers", wireAdds: 8 },
+  { id: 7, team: "Grilled Cheese Enjoyers", wireAdds: 21 },
+  { id: 8, team: "De'von 8chan", wireAdds: 9 },
+  { id: 9, team: "Hawk travis etienne jr.", wireAdds: 45 },
+  { id: 10, team: "New Orleans Nicks", wireAdds: 18 },
+  { id: 11, team: "It was a G.I. Jane joke", wireAdds: 13 },
+  { id: 12, team: "Kancharbonnet", wireAdds: 48 },
 ];
 
 const GOOGLE_SHEET_RANGES = [
@@ -119,18 +134,29 @@ function canonicalTeamMap(googleData, espnData) {
   const fallbackById = new Map(ESPN_TEAM_FALLBACK.map((team) => [team.id, team]));
   const liveById = new Map((espnData?.teams || []).map((team) => [team.id, team]));
   const googleByOwner = new Map(googleData.teams.map((team) => [team.owner, team]));
-  const waiverClaimsByTeam = new Map();
+  const wireAddsByTeam = new Map();
   (espnData?.transactions || [])
-    .filter((transaction) => transaction.type === "WAIVER")
+    .filter((transaction) => ["WAIVER", "FREEAGENT"].includes(transaction.type))
     .forEach((transaction) => {
       const teamId = asNumber(transaction.teamId);
-      if (teamId > 0) waiverClaimsByTeam.set(teamId, (waiverClaimsByTeam.get(teamId) || 0) + 1);
+      if (teamId <= 0) return;
+      const activity = wireAddsByTeam.get(teamId) || { waiverClaims: 0, freeAgentAdds: 0 };
+      if (transaction.type === "WAIVER") activity.waiverClaims += 1;
+      if (transaction.type === "FREEAGENT") activity.freeAgentAdds += 1;
+      wireAddsByTeam.set(teamId, activity);
     });
 
   return ESPN_TEAM_FALLBACK.map((fallback) => {
     const live = liveById.get(fallback.id);
     const google = googleByOwner.get(fallback.owner);
     const overall = live?.record?.overall || {};
+    const wireAdds = wireAddsByTeam.get(fallback.id);
+    const waiverClaims = Array.isArray(espnData?.transactions)
+      ? wireAdds?.waiverClaims || 0
+      : asNumber(google?.waiverClaims);
+    const freeAgentAdds = Array.isArray(espnData?.transactions)
+      ? wireAdds?.freeAgentAdds || 0
+      : asNumber(google?.freeAgentAdds);
     return {
       team: asText(live?.name) || fallback.name,
       owner: fallback.owner,
@@ -145,9 +171,9 @@ function canonicalTeamMap(googleData, espnData) {
       espnLosses: asNumber(overall.losses),
       espnTies: asNumber(overall.ties),
       playoffSeed: asNumber(live?.playoffSeed, fallback.id),
-      waiverClaims: Array.isArray(espnData?.transactions)
-        ? waiverClaimsByTeam.get(fallback.id) || 0
-        : asNumber(google?.waiverClaims),
+      waiverClaims,
+      freeAgentAdds,
+      wireAdds: waiverClaims + freeAgentAdds,
       oldTeam: google?.team || fallbackById.get(fallback.id)?.name,
     };
   });
@@ -161,6 +187,19 @@ export function mergeEspnData(googleData, espnData = null) {
   const teams = canonicalTeamMap(googleData, espnData);
   const waiverDataAvailable = Array.isArray(espnData?.transactions);
   const byId = new Map(teams.map((team) => [team.espnTeamId, team]));
+  const historicalWireTeams = ESPN_2025_WIRE_ADDS.map((historical) => {
+    const current = byId.get(historical.id);
+    return {
+      season: 2025,
+      team: historical.team,
+      owner: current?.owner || ESPN_TEAM_FALLBACK.find((team) => team.id === historical.id)?.owner || "",
+      espnTeamId: historical.id,
+      abbreviation: current?.abbreviation || ESPN_TEAM_FALLBACK.find((team) => team.id === historical.id)?.abbrev || "",
+      logo: current?.logo || null,
+      logoType: current?.logoType || null,
+      wireAdds: historical.wireAdds,
+    };
+  });
   const canonicalByOldName = new Map();
   teams.forEach((team) => {
     canonicalByOldName.set(team.oldTeam, team.team);
@@ -302,14 +341,28 @@ export function mergeEspnData(googleData, espnData = null) {
       waiverDataAvailable,
       syncMode: espnData ? "live-google-sheets-and-espn" : "live-google-sheets-espn-fallback",
       syncedAt: new Date().toISOString(),
-      schemaVersion: 3,
+      schemaVersion: 4,
     },
     teams: teams.map(({ oldTeam, ...team }) => team),
     waivers: {
       source: "espn",
       available: waiverDataAvailable,
       totalClaims: teams.reduce((sum, team) => sum + team.waiverClaims, 0),
+      totalFreeAgentAdds: teams.reduce((sum, team) => sum + team.freeAgentAdds, 0),
+      totalAdds: teams.reduce((sum, team) => sum + team.wireAdds, 0),
       lastProcessedAt: espnData?.status?.waiverLastExecutionDate || null,
+    },
+    history: {
+      ...googleData.history,
+      wireAdds: {
+        ...googleData.history?.wireAdds,
+        2025: {
+          season: 2025,
+          source: "espn-transaction-counter",
+          totalAdds: historicalWireTeams.reduce((sum, team) => sum + team.wireAdds, 0),
+          teams: historicalWireTeams,
+        },
+      },
     },
     buyIns,
     schedule,

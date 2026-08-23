@@ -3,9 +3,9 @@
     "leagueName": "FanterFootbah",
     "sourceUrl": "https://docs.google.com/spreadsheets/d/1NtRDgw3Jzo5HtB4zU-lnx5niiFDKfPLJww4ToEjqsHg/edit?usp=sharing",
     "workbookName": "FanterFootbah Treasurer Tracker",
-    "syncedAt": "2026-08-23T01:19:24.817Z",
+    "syncedAt": "2026-08-23T03:51:56.848Z",
     "syncMode": "live-google-sheets-and-espn",
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "espnLeagueUrl": "https://fantasy.espn.com/football/league?leagueId=635040019",
     "espnLive": true,
     "waiverDataAvailable": true
@@ -44,7 +44,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 16,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0
     },
     {
       "team": "Big Body Newms",
@@ -60,7 +62,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 15,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0
     },
     {
       "team": "brazil bru h",
@@ -76,7 +80,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 14,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0
     },
     {
       "team": "Big Chungus",
@@ -92,7 +98,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 13,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0
     },
     {
       "team": "Hot Dog U Bean Eaters",
@@ -108,7 +116,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 12,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0
     },
     {
       "team": "Ball Fondilers",
@@ -124,7 +134,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 11,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0
     },
     {
       "team": "Futbol Experts",
@@ -140,7 +152,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 10,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0
     },
     {
       "team": "Autism Speaks",
@@ -156,7 +170,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 9,
-      "waiverClaims": 1
+      "waiverClaims": 1,
+      "freeAgentAdds": 0,
+      "wireAdds": 1
     },
     {
       "team": "Courtland Sutton",
@@ -172,7 +188,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 8,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 1,
+      "wireAdds": 1
     },
     {
       "team": "Tung Tung Shakir",
@@ -188,7 +206,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 7,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0
     },
     {
       "team": "It was a G.I. Jane joke",
@@ -204,7 +224,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 6,
-      "waiverClaims": 1
+      "waiverClaims": 1,
+      "freeAgentAdds": 0,
+      "wireAdds": 1
     },
     {
       "team": "DeVinta Smith",
@@ -220,7 +242,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 5,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0
     },
     {
       "team": "Hawk Tuah Hit Squad",
@@ -236,7 +260,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 4,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0
     },
     {
       "team": "Free Rashee Rice",
@@ -252,7 +278,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 3,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0
     },
     {
       "team": "wupwtw",
@@ -268,7 +296,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 2,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0
     },
     {
       "team": "Big Hog Gabe",
@@ -284,7 +314,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 1,
-      "waiverClaims": 0
+      "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0
     }
   ],
   "buyIns": [
@@ -2814,6 +2846,8 @@
       "espnTies": 0,
       "playoffSeed": 16,
       "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -2845,6 +2879,8 @@
       "espnTies": 0,
       "playoffSeed": 15,
       "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -2876,6 +2912,8 @@
       "espnTies": 0,
       "playoffSeed": 14,
       "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -2907,6 +2945,8 @@
       "espnTies": 0,
       "playoffSeed": 13,
       "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -2938,6 +2978,8 @@
       "espnTies": 0,
       "playoffSeed": 12,
       "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -2969,6 +3011,8 @@
       "espnTies": 0,
       "playoffSeed": 11,
       "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3000,6 +3044,8 @@
       "espnTies": 0,
       "playoffSeed": 10,
       "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3031,6 +3077,8 @@
       "espnTies": 0,
       "playoffSeed": 9,
       "waiverClaims": 1,
+      "freeAgentAdds": 0,
+      "wireAdds": 1,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3062,6 +3110,8 @@
       "espnTies": 0,
       "playoffSeed": 8,
       "waiverClaims": 0,
+      "freeAgentAdds": 1,
+      "wireAdds": 1,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3093,6 +3143,8 @@
       "espnTies": 0,
       "playoffSeed": 7,
       "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3124,6 +3176,8 @@
       "espnTies": 0,
       "playoffSeed": 6,
       "waiverClaims": 1,
+      "freeAgentAdds": 0,
+      "wireAdds": 1,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3155,6 +3209,8 @@
       "espnTies": 0,
       "playoffSeed": 5,
       "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3186,6 +3242,8 @@
       "espnTies": 0,
       "playoffSeed": 4,
       "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3217,6 +3275,8 @@
       "espnTies": 0,
       "playoffSeed": 3,
       "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3248,6 +3308,8 @@
       "espnTies": 0,
       "playoffSeed": 2,
       "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3279,6 +3341,8 @@
       "espnTies": 0,
       "playoffSeed": 1,
       "waiverClaims": 0,
+      "freeAgentAdds": 0,
+      "wireAdds": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3300,6 +3364,139 @@
     "source": "espn",
     "available": true,
     "totalClaims": 2,
+    "totalFreeAgentAdds": 1,
+    "totalAdds": 3,
     "lastProcessedAt": 1787382262048
+  },
+  "history": {
+    "wireAdds": {
+      "2025": {
+        "season": 2025,
+        "source": "espn-transaction-counter",
+        "totalAdds": 271,
+        "teams": [
+          {
+            "season": 2025,
+            "team": "Hawk Invert Tetrahedron Etienne",
+            "owner": "Joe Berni",
+            "espnTeamId": 1,
+            "abbreviation": "Joe!",
+            "logo": "https://g.espncdn.com/lm-static/logo-packs/core/BobsBurgers/Bob.svg",
+            "logoType": "VECTOR",
+            "wireAdds": 41
+          },
+          {
+            "season": 2025,
+            "team": "Team Newman",
+            "owner": "Ethan Newman",
+            "espnTeamId": 2,
+            "abbreviation": "NEWM",
+            "logo": "https://g.espncdn.com/lm-static/ffl/images/default_logos/19.svg",
+            "logoType": "VECTOR",
+            "wireAdds": 49
+          },
+          {
+            "season": 2025,
+            "team": "brazil bru h",
+            "owner": "Reid Miller",
+            "espnTeamId": 3,
+            "abbreviation": "AAAa",
+            "logo": "https://g.espncdn.com/lm-static/logo-packs/core/StadiumFoods-ESPN/stadium-foods_cheeseburger.svg",
+            "logoType": "VECTOR",
+            "wireAdds": 10
+          },
+          {
+            "season": 2025,
+            "team": "Big Chungus",
+            "owner": "Will Dolan",
+            "espnTeamId": 4,
+            "abbreviation": "W",
+            "logo": "https://g.espncdn.com/lm-static/logo-packs/ffl/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg",
+            "logoType": "VECTOR",
+            "wireAdds": 4
+          },
+          {
+            "season": 2025,
+            "team": "Hot Dog U Bean Eaters",
+            "owner": "Gabe Gross",
+            "espnTeamId": 5,
+            "abbreviation": "BEAN",
+            "logo": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/954d2ec0-8c6e-11f0-afb5-e14f006a2a34",
+            "logoType": "CUSTOM_UPLOAD",
+            "wireAdds": 5
+          },
+          {
+            "season": 2025,
+            "team": "Ball Fondilers",
+            "owner": "Tyler Buganski",
+            "espnTeamId": 6,
+            "abbreviation": "BALz",
+            "logo": "https://g.espncdn.com/lm-static/logo-packs/ffl/AtTheStadium-RobbHarskamp/At_The_Stadium_09.svg",
+            "logoType": "VECTOR",
+            "wireAdds": 8
+          },
+          {
+            "season": 2025,
+            "team": "Grilled Cheese Enjoyers",
+            "owner": "Christopher Morey",
+            "espnTeamId": 7,
+            "abbreviation": "UHHH",
+            "logo": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/504e37f0-7ee5-11f1-b80e-15498269b8f1",
+            "logoType": "CUSTOM_UPLOAD",
+            "wireAdds": 21
+          },
+          {
+            "season": 2025,
+            "team": "De'von 8chan",
+            "owner": "Michael Moen",
+            "espnTeamId": 8,
+            "abbreviation": "MMT",
+            "logo": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/a16611c0-9d0e-11f1-b987-2730e362696d",
+            "logoType": "CUSTOM_UPLOAD",
+            "wireAdds": 9
+          },
+          {
+            "season": 2025,
+            "team": "Hawk travis etienne jr.",
+            "owner": "Ben Fletcher",
+            "espnTeamId": 9,
+            "abbreviation": "BEN",
+            "logo": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/ed5c3750-9c26-11f1-a12e-9f0d745a1019",
+            "logoType": "CUSTOM_UPLOAD",
+            "wireAdds": 45
+          },
+          {
+            "season": 2025,
+            "team": "New Orleans Nicks",
+            "owner": "Nicholas Fletcher",
+            "espnTeamId": 10,
+            "abbreviation": "Nick",
+            "logo": "https://g.espncdn.com/lm-static/logo-packs/ffl/Blockparty-RobbHars/blockplayers-01.svg",
+            "logoType": "VECTOR",
+            "wireAdds": 18
+          },
+          {
+            "season": 2025,
+            "team": "It was a G.I. Jane joke",
+            "owner": "Brendan Smith",
+            "espnTeamId": 11,
+            "abbreviation": "MEOW",
+            "logo": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/23109f90-7be3-11f0-9d0e-d3c969c03a65",
+            "logoType": "CUSTOM_UPLOAD",
+            "wireAdds": 13
+          },
+          {
+            "season": 2025,
+            "team": "Kancharbonnet",
+            "owner": "Devin Kancherla",
+            "espnTeamId": 12,
+            "abbreviation": ":P",
+            "logo": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/b3e8fd30-9828-11f0-90f7-112fa0f42e74",
+            "logoType": "CUSTOM_UPLOAD",
+            "wireAdds": 48
+          }
+        ]
+      }
+    }
   }
 }

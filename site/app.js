@@ -363,13 +363,70 @@ function renderTeamCards(query = "") {
     : '<div class="no-results">No team or owner matches that search.</div>';
 }
 
+function renderHistoricalWaivers() {
+  const archive = state.data.history?.wireAdds?.[2025];
+  const history = $("#waiver-history");
+  if (!archive?.teams?.length) {
+    history.hidden = true;
+    return;
+  }
+
+  history.hidden = false;
+  const teams = archive.teams.map((team) => ({ ...team, wireAdds: Number(team.wireAdds) || 0 }));
+  const standings = [...teams].sort((a, b) => b.wireAdds - a.wireAdds || a.team.localeCompare(b.team));
+  const maxAdds = Math.max(1, ...standings.map((team) => team.wireAdds));
+  let priorAdds = null;
+  let currentRank = 0;
+
+  $("#waiver-history-total").innerHTML = `<strong>${archive.totalAdds}</strong><span>waiver + free-agent adds</span>`;
+  $("#waiver-history-leaderboard").innerHTML = standings
+    .map((team, index) => {
+      if (team.wireAdds !== priorAdds) currentRank = index + 1;
+      priorAdds = team.wireAdds;
+      const share = (team.wireAdds / maxAdds) * 100;
+      return `
+        <div class="waiver-row${team.owner === state.activeOwner ? " is-you" : ""}" style="--waiver-share: ${share}%">
+          <span class="waiver-rank${currentRank === 1 ? " is-top" : ""}">${currentRank}</span>
+          <div class="waiver-team">
+            ${teamAvatar(team)}
+            <span><strong>${escapeHtml(team.team)}</strong><small>${escapeHtml(team.owner)}${team.owner === state.activeOwner ? " · You" : ""}</small></span>
+          </div>
+          <span class="waiver-bar" aria-hidden="true"><i></i></span>
+          <span class="waiver-count"><strong>${team.wireAdds}</strong><small>adds</small></span>
+        </div>
+      `;
+    })
+    .join("");
+
+  const bottomThree = [...teams]
+    .sort((a, b) => a.wireAdds - b.wireAdds || a.team.localeCompare(b.team))
+    .slice(0, 3);
+  const cellarLabels = ["Deepest in the cellar", "Second least active", "Third least active"];
+  $("#waiver-history-shame").innerHTML = bottomThree
+    .map(
+      (team, index) => `
+        <article class="waiver-shame-card">
+          <span class="waiver-shame-rank">${index + 1}</span>
+          ${teamAvatar(team, "shame-avatar")}
+          <div><small>${cellarLabels[index]}</small><strong>${escapeHtml(team.team)}</strong><span>${escapeHtml(team.owner)}</span></div>
+          <b>${team.wireAdds}<small> adds</small></b>
+        </article>
+      `,
+    )
+    .join("");
+  $("#waiver-history-shame-note").textContent = "Final 2025 totals from ESPN’s Transaction Counter.";
+}
+
 function renderWaivers() {
+  renderHistoricalWaivers();
   const teams = state.data.summary.map((team) => ({
     ...team,
     waiverClaims: Number(team.waiverClaims) || 0,
+    freeAgentAdds: Number(team.freeAgentAdds) || 0,
+    wireAdds: Number(team.wireAdds) || (Number(team.waiverClaims) || 0) + (Number(team.freeAgentAdds) || 0),
   }));
   const waiverDataAvailable = Boolean(state.data.waivers?.available);
-  const totalClaims = teams.reduce((sum, team) => sum + team.waiverClaims, 0);
+  const totalAdds = teams.reduce((sum, team) => sum + team.wireAdds, 0);
   const total = $("#waiver-total");
   const leaderboard = $("#waiver-leaderboard");
   const shame = $("#waiver-shame");
@@ -383,22 +440,22 @@ function renderWaivers() {
     return;
   }
 
-  total.innerHTML = `<strong>${totalClaims}</strong><span>claim${totalClaims === 1 ? "" : "s"} submitted</span>`;
+  total.innerHTML = `<strong>${totalAdds}</strong><span>waiver + free-agent add${totalAdds === 1 ? "" : "s"}</span>`;
   const standings = [...teams].sort(
-    (a, b) => b.waiverClaims - a.waiverClaims || a.team.localeCompare(b.team),
+    (a, b) => b.wireAdds - a.wireAdds || a.team.localeCompare(b.team),
   );
-  const maxClaims = Math.max(1, ...standings.map((team) => team.waiverClaims));
-  let priorClaims = null;
+  const maxAdds = Math.max(1, ...standings.map((team) => team.wireAdds));
+  let priorAdds = null;
   let currentRank = 0;
 
-  const zeroBanner = totalClaims === 0
-    ? '<div class="waiver-zero-banner"><strong>The wire is untouched.</strong><span>Everybody starts tied at zero.</span></div>'
+  const zeroBanner = totalAdds === 0
+    ? '<div class="waiver-zero-banner"><strong>The wire is untouched.</strong><span>No waiver claims or free-agent pickups yet.</span></div>'
     : "";
   leaderboard.innerHTML = `${zeroBanner}${standings
     .map((team, index) => {
-      if (team.waiverClaims !== priorClaims) currentRank = index + 1;
-      priorClaims = team.waiverClaims;
-      const share = (team.waiverClaims / maxClaims) * 100;
+      if (team.wireAdds !== priorAdds) currentRank = index + 1;
+      priorAdds = team.wireAdds;
+      const share = (team.wireAdds / maxAdds) * 100;
       return `
         <div class="waiver-row${team.owner === state.activeOwner ? " is-you" : ""}" style="--waiver-share: ${share}%">
           <span class="waiver-rank${currentRank === 1 ? " is-top" : ""}">${currentRank}</span>
@@ -407,24 +464,24 @@ function renderWaivers() {
             <span><strong>${escapeHtml(team.team)}</strong><small>${escapeHtml(team.owner)}${team.owner === state.activeOwner ? " · You" : ""}</small></span>
           </div>
           <span class="waiver-bar" aria-hidden="true"><i></i></span>
-          <span class="waiver-count"><strong>${team.waiverClaims}</strong><small>claim${team.waiverClaims === 1 ? "" : "s"}</small></span>
+          <span class="waiver-count"><strong>${team.wireAdds}</strong><small>${team.waiverClaims}W · ${team.freeAgentAdds}FA</small></span>
         </div>
       `;
     })
     .join("")}`;
 
-  if (totalClaims === 0) {
-    shame.innerHTML = '<div class="waiver-no-shame"><strong>0</strong><h4>No shame yet</h4><p>Nobody gets dragged before the first claim.</p></div>';
+  if (totalAdds === 0) {
+    shame.innerHTML = '<div class="waiver-no-shame"><strong>0</strong><h4>No shame yet</h4><p>Nobody gets dragged before the first roster add.</p></div>';
     shameNote.textContent = "All 16 teams are tied.";
     return;
   }
 
   const bottom = [...teams].sort(
-    (a, b) => a.waiverClaims - b.waiverClaims || a.team.localeCompare(b.team),
+    (a, b) => a.wireAdds - b.wireAdds || a.team.localeCompare(b.team),
   );
   const bottomThree = bottom.slice(0, 3);
-  const cutoffClaims = bottomThree.at(-1)?.waiverClaims ?? 0;
-  const teamsAtCutoff = bottom.filter((team) => team.waiverClaims === cutoffClaims).length;
+  const cutoffAdds = bottomThree.at(-1)?.wireAdds ?? 0;
+  const teamsAtCutoff = bottom.filter((team) => team.wireAdds === cutoffAdds).length;
   const cellarLabels = ["Deepest in the cellar", "Still down here", "Barely moving"];
   shame.innerHTML = bottomThree
     .map(
@@ -433,13 +490,13 @@ function renderWaivers() {
           <span class="waiver-shame-rank">${index + 1}</span>
           ${teamAvatar(team, "shame-avatar")}
           <div><small>${cellarLabels[index]}</small><strong>${escapeHtml(team.team)}</strong><span>${escapeHtml(team.owner)}</span></div>
-          <b>${team.waiverClaims}<small> claim${team.waiverClaims === 1 ? "" : "s"}</small></b>
+          <b>${team.wireAdds}<small> add${team.wireAdds === 1 ? "" : "s"}</small></b>
         </article>
       `,
     )
     .join("");
   shameNote.textContent = teamsAtCutoff > 1
-    ? `${teamsAtCutoff} teams are tied at ${cutoffClaims}; three are shown alphabetically.`
+    ? `${teamsAtCutoff} teams are tied at ${cutoffAdds}; three are shown alphabetically.`
     : "The cellar updates automatically with ESPN.";
 }
 

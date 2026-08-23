@@ -2977,6 +2977,102 @@ body.is-signing-in .buyin-toggle {
   font-size: 9px;
 }
 
+.waiver-history {
+  margin-top: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(20, 36, 28, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 253, 248, 0.82);
+  box-shadow: 0 12px 30px rgba(16, 33, 25, 0.08);
+}
+
+.waiver-history > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 86px;
+  padding: 20px 24px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.waiver-history > summary::-webkit-details-marker {
+  display: none;
+}
+
+.waiver-history > summary > span:first-child small,
+.waiver-history > summary > span:first-child strong {
+  display: block;
+}
+
+.waiver-history > summary > span:first-child small {
+  color: var(--green);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.waiver-history > summary > span:first-child strong {
+  margin-top: 7px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+  letter-spacing: -0.025em;
+}
+
+.waiver-history-action {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 9px;
+  color: var(--ink-soft);
+  font-size: 9px;
+  font-weight: 850;
+}
+
+.waiver-history-action b {
+  display: grid;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  border-radius: 9px;
+  color: white;
+  background: var(--forest);
+  transition: transform 220ms ease;
+}
+
+.waiver-history[open] .waiver-history-action b {
+  transform: rotate(180deg);
+}
+
+.waiver-history-content {
+  padding: 25px;
+  border-top: 1px solid rgba(20, 36, 28, 0.08);
+  background: #f2f0e9;
+}
+
+.waiver-history-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.waiver-history-heading h3 {
+  margin: 6px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(26px, 3vw, 36px);
+  letter-spacing: -0.045em;
+}
+
+.waiver-history-shame {
+  background:
+    radial-gradient(circle at 100% 0, rgba(239, 151, 70, 0.32), transparent 40%),
+    linear-gradient(145deg, #3f211d, #1d1a17 76%);
+}
+
 @keyframes pot-ring-in {
   from {
     opacity: 0;
@@ -3182,6 +3278,27 @@ body.is-signing-in .buyin-toggle {
 
   .waiver-shame-card > b small {
     display: block;
+  }
+
+  .waiver-history > summary {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 18px;
+  }
+
+  .waiver-history-action {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .waiver-history-content {
+    padding: 15px 10px;
+  }
+
+  .waiver-history-heading {
+    align-items: stretch;
+    flex-direction: column;
+    padding-inline: 6px;
   }
 
   .fun-stat {
