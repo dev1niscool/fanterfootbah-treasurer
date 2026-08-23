@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 
 import {
+  ESPN_API_FILTER,
   ESPN_API_URL,
   GOOGLE_SHEET_ID,
   mergeEspnData,
@@ -39,9 +40,15 @@ const loaded = await Promise.all(sources.map(loadRows));
 const googleData = parseGoogleSheetData(
   Object.fromEntries(sources.map((source, index) => [source.key, loaded[index]])),
 );
-const espnResponse = await fetch(ESPN_API_URL, { cache: "no-store" });
+const espnResponse = await fetch(ESPN_API_URL, {
+  cache: "no-store",
+  headers: { "x-fantasy-filter": ESPN_API_FILTER },
+});
 if (!espnResponse.ok) throw new Error(`ESPN returned ${espnResponse.status}.`);
 const espnData = await espnResponse.json();
+if (!Array.isArray(espnData.transactions) || !espnData.transactions.every((transaction) => transaction.type === "WAIVER")) {
+  throw new Error("Expected ESPN to return only waiver transactions.");
+}
 const data = mergeEspnData(googleData, espnData);
 
 if (data.teams.length !== 16) throw new Error(`Expected 16 teams; found ${data.teams.length}.`);
@@ -61,6 +68,12 @@ if (!data.teams.some((team) => team.owner === "Christopher Morey" && team.team =
 }
 if (!data.teams.every((team) => team.logo?.startsWith("https://") && team.logoType)) {
   throw new Error("Expected every ESPN team to include a secure logo and logo type.");
+}
+if (!data.waivers?.available || !data.teams.every((team) => Number.isInteger(team.waiverClaims))) {
+  throw new Error("Expected ESPN waiver totals for every team.");
+}
+if (data.waivers.totalClaims !== data.teams.reduce((sum, team) => sum + team.waiverClaims, 0)) {
+  throw new Error("ESPN waiver totals do not match the team leaderboard.");
 }
 if (!data.schedule.every((game) => game.source === "espn")) {
   throw new Error("Expected every regular-season matchup to come from ESPN.");
@@ -88,6 +101,7 @@ console.log(
       espnLive: data.meta.espnLive,
       teams: data.teams.length,
       teamLogos: data.teams.filter((team) => team.logo).length,
+      waiverClaims: data.waivers.totalClaims,
       paidTeams: data.finances.teamsPaid,
       buyInsOutstanding: data.finances.buyInsOutstanding,
       matchups: data.schedule.length,

@@ -94,6 +94,9 @@
             <button class="tab-button" id="tab-teams" role="tab" aria-selected="false" aria-controls="teams" data-tab="teams">
               Teams
             </button>
+            <button class="tab-button" id="tab-waivers" role="tab" aria-selected="false" aria-controls="waivers" data-tab="waivers">
+              Waivers
+            </button>
             <button class="tab-button" id="tab-schedule" role="tab" aria-selected="false" aria-controls="schedule" data-tab="schedule">
               Schedule
             </button>
@@ -167,6 +170,35 @@
               </label>
             </div>
             <div class="team-grid" id="team-grid"></div>
+          </section>
+
+          <section class="tab-panel" id="waivers" role="tabpanel" aria-labelledby="tab-waivers" tabindex="0" hidden>
+            <div class="section-heading waiver-section-heading">
+              <div>
+                <p class="eyebrow">Waiver wire activity</p>
+                <h2>Who wants it most?</h2>
+              </div>
+              <div class="waiver-total" id="waiver-total" aria-live="polite"></div>
+            </div>
+            <div class="waiver-layout">
+              <article class="panel waiver-leaderboard-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="panel-kicker">Most claims submitted</p>
+                    <h3>Waiver leaderboard</h3>
+                  </div>
+                </div>
+                <div class="waiver-leaderboard" id="waiver-leaderboard"></div>
+              </article>
+              <aside class="waiver-shame-panel">
+                <div class="waiver-shame-heading">
+                  <p class="panel-kicker">Bottom three</p>
+                  <h3>The shame cellar</h3>
+                </div>
+                <div class="waiver-shame-grid" id="waiver-shame"></div>
+                <p class="waiver-shame-note" id="waiver-shame-note"></p>
+              </aside>
+            </div>
           </section>
 
           <section class="tab-panel" id="schedule" role="tabpanel" aria-labelledby="tab-schedule" tabindex="0" hidden>

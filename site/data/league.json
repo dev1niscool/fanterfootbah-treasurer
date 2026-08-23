@@ -3,11 +3,12 @@
     "leagueName": "FanterFootbah",
     "sourceUrl": "https://docs.google.com/spreadsheets/d/1NtRDgw3Jzo5HtB4zU-lnx5niiFDKfPLJww4ToEjqsHg/edit?usp=sharing",
     "workbookName": "FanterFootbah Treasurer Tracker",
-    "syncedAt": "2026-08-22T23:57:01.458Z",
+    "syncedAt": "2026-08-23T01:19:24.817Z",
     "syncMode": "live-google-sheets-and-espn",
-    "schemaVersion": 2,
+    "schemaVersion": 3,
     "espnLeagueUrl": "https://fantasy.espn.com/football/league?leagueId=635040019",
-    "espnLive": true
+    "espnLive": true,
+    "waiverDataAvailable": true
   },
   "season": {
     "label": "2026",
@@ -42,7 +43,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 16
+      "playoffSeed": 16,
+      "waiverClaims": 0
     },
     {
       "team": "Big Body Newms",
@@ -57,7 +59,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 15
+      "playoffSeed": 15,
+      "waiverClaims": 0
     },
     {
       "team": "brazil bru h",
@@ -72,7 +75,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 14
+      "playoffSeed": 14,
+      "waiverClaims": 0
     },
     {
       "team": "Big Chungus",
@@ -87,7 +91,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 13
+      "playoffSeed": 13,
+      "waiverClaims": 0
     },
     {
       "team": "Hot Dog U Bean Eaters",
@@ -102,7 +107,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 12
+      "playoffSeed": 12,
+      "waiverClaims": 0
     },
     {
       "team": "Ball Fondilers",
@@ -117,7 +123,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 11
+      "playoffSeed": 11,
+      "waiverClaims": 0
     },
     {
       "team": "Futbol Experts",
@@ -132,7 +139,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 10
+      "playoffSeed": 10,
+      "waiverClaims": 0
     },
     {
       "team": "Autism Speaks",
@@ -147,7 +155,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 9
+      "playoffSeed": 9,
+      "waiverClaims": 1
     },
     {
       "team": "Courtland Sutton",
@@ -162,7 +171,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 8
+      "playoffSeed": 8,
+      "waiverClaims": 0
     },
     {
       "team": "Tung Tung Shakir",
@@ -177,7 +187,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 7
+      "playoffSeed": 7,
+      "waiverClaims": 0
     },
     {
       "team": "It was a G.I. Jane joke",
@@ -192,7 +203,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 6
+      "playoffSeed": 6,
+      "waiverClaims": 1
     },
     {
       "team": "DeVinta Smith",
@@ -207,7 +219,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 5
+      "playoffSeed": 5,
+      "waiverClaims": 0
     },
     {
       "team": "Hawk Tuah Hit Squad",
@@ -222,7 +235,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 4
+      "playoffSeed": 4,
+      "waiverClaims": 0
     },
     {
       "team": "Free Rashee Rice",
@@ -237,7 +251,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 3
+      "playoffSeed": 3,
+      "waiverClaims": 0
     },
     {
       "team": "wupwtw",
@@ -252,7 +267,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 2
+      "playoffSeed": 2,
+      "waiverClaims": 0
     },
     {
       "team": "Big Hog Gabe",
@@ -267,7 +283,8 @@
       "espnWins": 0,
       "espnLosses": 0,
       "espnTies": 0,
-      "playoffSeed": 1
+      "playoffSeed": 1,
+      "waiverClaims": 0
     }
   ],
   "buyIns": [
@@ -2796,6 +2813,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 16,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -2826,6 +2844,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 15,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -2856,6 +2875,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 14,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -2886,6 +2906,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 13,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -2916,6 +2937,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 12,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -2946,6 +2968,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 11,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -2976,6 +2999,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 10,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3006,6 +3030,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 9,
+      "waiverClaims": 1,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3036,6 +3061,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 8,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3066,6 +3092,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 7,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3096,6 +3123,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 6,
+      "waiverClaims": 1,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3126,6 +3154,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 5,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3156,6 +3185,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 4,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3186,6 +3216,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 3,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3216,6 +3247,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 2,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3246,6 +3278,7 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 1,
+      "waiverClaims": 0,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3262,5 +3295,11 @@
       "outstandingWinnings": 0,
       "netAfterBuyIn": -30
     }
-  ]
+  ],
+  "waivers": {
+    "source": "espn",
+    "available": true,
+    "totalClaims": 2,
+    "lastProcessedAt": 1787382262048
+  }
 }

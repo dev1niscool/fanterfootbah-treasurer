@@ -2638,6 +2638,345 @@ body.is-signing-in .buyin-toggle {
   animation-delay: var(--delay);
 }
 
+.waiver-section-heading {
+  align-items: flex-end;
+}
+
+.waiver-total {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid rgba(47, 125, 82, 0.14);
+  border-radius: 13px;
+  background: rgba(216, 242, 223, 0.42);
+}
+
+.waiver-total strong {
+  color: var(--green);
+  font-size: 25px;
+  letter-spacing: -0.05em;
+}
+
+.waiver-total span {
+  color: var(--ink-soft);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.waiver-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(330px, 0.6fr);
+  align-items: start;
+  gap: 16px;
+}
+
+.waiver-leaderboard-panel {
+  overflow: hidden;
+  padding-bottom: 22px;
+}
+
+.waiver-leaderboard {
+  display: grid;
+  gap: 7px;
+  padding: 0 24px;
+}
+
+.waiver-zero-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 5px;
+  padding: 13px 15px;
+  border-radius: 13px;
+  color: #76501a;
+  background: var(--gold-soft);
+  font-size: 10px;
+}
+
+.waiver-zero-banner strong {
+  font-size: 12px;
+}
+
+.waiver-row {
+  display: grid;
+  grid-template-columns: 30px minmax(185px, 1.1fr) minmax(90px, 0.8fr) 58px;
+  align-items: center;
+  gap: 12px;
+  min-height: 57px;
+  padding: 8px 10px;
+  border: 1px solid rgba(20, 36, 28, 0.07);
+  border-radius: 14px;
+  background: #fbfaf6;
+}
+
+.waiver-row.is-you {
+  border-color: rgba(47, 125, 82, 0.3);
+  background: rgba(216, 242, 223, 0.38);
+}
+
+.waiver-rank {
+  display: grid;
+  width: 27px;
+  height: 27px;
+  place-items: center;
+  border-radius: 9px;
+  color: var(--ink-soft);
+  background: rgba(20, 36, 28, 0.055);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.waiver-rank.is-top {
+  color: #7a4b08;
+  background: var(--gold-soft);
+}
+
+.waiver-team {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 10px;
+}
+
+.waiver-team > span:last-child,
+.waiver-team strong,
+.waiver-team small {
+  display: block;
+  min-width: 0;
+}
+
+.waiver-team strong {
+  overflow: hidden;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.waiver-team small {
+  margin-top: 3px;
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.waiver-team .avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+.waiver-bar {
+  display: block;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e8ebe6;
+}
+
+.waiver-bar i {
+  display: block;
+  width: var(--waiver-share);
+  height: 100%;
+  min-width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--green), #74b56d);
+  transition: width 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.waiver-count {
+  text-align: right;
+}
+
+.waiver-count strong,
+.waiver-count small {
+  display: block;
+}
+
+.waiver-count strong {
+  font-size: 18px;
+  letter-spacing: -0.04em;
+}
+
+.waiver-count small {
+  color: var(--ink-soft);
+  font-size: 8px;
+  font-weight: 750;
+}
+
+.waiver-shame-panel {
+  position: relative;
+  overflow: hidden;
+  padding: 27px;
+  border-radius: 20px;
+  color: white;
+  background:
+    radial-gradient(circle at 100% 0, rgba(244, 184, 96, 0.34), transparent 38%),
+    linear-gradient(145deg, #49251f, #221d19 76%);
+  box-shadow: 0 16px 34px rgba(54, 25, 20, 0.2);
+}
+
+.waiver-shame-panel::after {
+  position: absolute;
+  right: -8px;
+  bottom: -44px;
+  color: rgba(255, 255, 255, 0.035);
+  content: "↓";
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 210px;
+  line-height: 1;
+}
+
+.waiver-shame-heading,
+.waiver-shame-grid,
+.waiver-shame-note {
+  position: relative;
+  z-index: 1;
+}
+
+.waiver-shame-heading .panel-kicker {
+  color: #f5ba67;
+}
+
+.waiver-shame-heading h3 {
+  margin: 5px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 29px;
+  letter-spacing: -0.04em;
+}
+
+.waiver-shame-grid {
+  display: grid;
+  gap: 9px;
+  margin-top: 22px;
+}
+
+.waiver-shame-card {
+  display: grid;
+  grid-template-columns: 25px 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  padding: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.075);
+}
+
+.waiver-shame-rank {
+  color: #f5ba67;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.shame-avatar {
+  width: 42px;
+  height: 42px;
+  border-color: rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.shame-avatar .avatar-fallback {
+  color: white;
+}
+
+.waiver-shame-card div,
+.waiver-shame-card div > * {
+  display: block;
+  min-width: 0;
+}
+
+.waiver-shame-card div small {
+  color: #e5b67a;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.waiver-shame-card div strong {
+  margin-top: 3px;
+  overflow: hidden;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.waiver-shame-card div span {
+  margin-top: 2px;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.waiver-shame-card > b {
+  text-align: right;
+  font-size: 18px;
+}
+
+.waiver-shame-card > b small {
+  display: block;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 7px;
+}
+
+.waiver-shame-note {
+  margin: 15px 1px 0;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.waiver-no-shame {
+  grid-column: 1 / -1;
+  padding: 26px 14px;
+  text-align: center;
+}
+
+.waiver-no-shame > strong {
+  display: grid;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+  color: #f5ba67;
+  background: rgba(255, 255, 255, 0.08);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 34px;
+}
+
+.waiver-no-shame h4 {
+  margin: 15px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+}
+
+.waiver-no-shame p {
+  margin: 7px auto 0;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 9px;
+}
+
+.waiver-unavailable {
+  display: grid;
+  gap: 6px;
+  padding: 42px 20px;
+  text-align: center;
+}
+
+.waiver-unavailable span {
+  color: var(--ink-soft);
+  font-size: 9px;
+}
+
 @keyframes pot-ring-in {
   from {
     opacity: 0;
@@ -2671,7 +3010,8 @@ body.is-signing-in .buyin-toggle {
 
 @media (max-width: 1060px) {
   .quick-strip,
-  .competition-grid {
+  .competition-grid,
+  .waiver-layout {
     grid-template-columns: 1fr;
   }
 
@@ -2681,6 +3021,23 @@ body.is-signing-in .buyin-toggle {
 
   .pot-overview-grid {
     grid-template-columns: 1fr;
+  }
+
+  .waiver-shame-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .waiver-shame-card {
+    grid-template-columns: 25px 42px minmax(0, 1fr);
+  }
+
+  .waiver-shame-card > b {
+    grid-column: 2 / -1;
+    text-align: left;
+  }
+
+  .waiver-shame-card > b small {
+    display: inline;
   }
 }
 
@@ -2765,6 +3122,66 @@ body.is-signing-in .buyin-toggle {
 
   .fun-stat-grid {
     grid-template-columns: 1fr;
+  }
+
+  .waiver-section-heading {
+    align-items: stretch;
+  }
+
+  .waiver-total {
+    justify-content: center;
+  }
+
+  .waiver-leaderboard {
+    padding-inline: 12px;
+  }
+
+  .waiver-zero-banner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .waiver-row {
+    grid-template-columns: 28px minmax(0, 1fr) 50px;
+    gap: 8px;
+    padding: 9px 8px;
+  }
+
+  .waiver-team strong,
+  .waiver-team small {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .waiver-bar {
+    grid-column: 2 / -1;
+    grid-row: 2;
+  }
+
+  .waiver-count {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .waiver-shame-panel {
+    padding: 23px 18px;
+  }
+
+  .waiver-shame-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .waiver-shame-card {
+    grid-template-columns: 25px 42px minmax(0, 1fr) auto;
+  }
+
+  .waiver-shame-card > b {
+    grid-column: auto;
+    text-align: right;
+  }
+
+  .waiver-shame-card > b small {
+    display: block;
   }
 
   .fun-stat {

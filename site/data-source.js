@@ -2,7 +2,15 @@ export const GOOGLE_SHEET_ID = "1NtRDgw3Jzo5HtB4zU-lnx5niiFDKfPLJww4ToEjqsHg";
 export const GOOGLE_SHEET_URL = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/edit?usp=sharing`;
 export const ESPN_LEAGUE_URL = "https://fantasy.espn.com/football/league?leagueId=635040019";
 export const ESPN_API_URL =
-  "https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/2026/segments/0/leagues/635040019?view=mTeam&view=mMatchup&view=mStandings&view=mSettings";
+  "https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/2026/segments/0/leagues/635040019?view=mTeam&view=mMatchup&view=mStandings&view=mSettings&view=mTransactions2";
+export const ESPN_API_FILTER = JSON.stringify({
+  transactions: {
+    filterType: { value: ["WAIVER"] },
+    limit: 1000,
+    offset: 0,
+    sortProcessDate: { sortPriority: 1, sortAsc: false },
+  },
+});
 
 const ESPN_TEAM_FALLBACK = [
   { id: 1, abbrev: "Joe!", name: "Bobsondinho's Revenge", owner: "Joe Berni" },
@@ -111,6 +119,13 @@ function canonicalTeamMap(googleData, espnData) {
   const fallbackById = new Map(ESPN_TEAM_FALLBACK.map((team) => [team.id, team]));
   const liveById = new Map((espnData?.teams || []).map((team) => [team.id, team]));
   const googleByOwner = new Map(googleData.teams.map((team) => [team.owner, team]));
+  const waiverClaimsByTeam = new Map();
+  (espnData?.transactions || [])
+    .filter((transaction) => transaction.type === "WAIVER")
+    .forEach((transaction) => {
+      const teamId = asNumber(transaction.teamId);
+      if (teamId > 0) waiverClaimsByTeam.set(teamId, (waiverClaimsByTeam.get(teamId) || 0) + 1);
+    });
 
   return ESPN_TEAM_FALLBACK.map((fallback) => {
     const live = liveById.get(fallback.id);
@@ -130,6 +145,9 @@ function canonicalTeamMap(googleData, espnData) {
       espnLosses: asNumber(overall.losses),
       espnTies: asNumber(overall.ties),
       playoffSeed: asNumber(live?.playoffSeed, fallback.id),
+      waiverClaims: Array.isArray(espnData?.transactions)
+        ? waiverClaimsByTeam.get(fallback.id) || 0
+        : asNumber(google?.waiverClaims),
       oldTeam: google?.team || fallbackById.get(fallback.id)?.name,
     };
   });
@@ -141,6 +159,7 @@ function payoutForWeek(week) {
 
 export function mergeEspnData(googleData, espnData = null) {
   const teams = canonicalTeamMap(googleData, espnData);
+  const waiverDataAvailable = Array.isArray(espnData?.transactions);
   const byId = new Map(teams.map((team) => [team.espnTeamId, team]));
   const canonicalByOldName = new Map();
   teams.forEach((team) => {
@@ -280,11 +299,18 @@ export function mergeEspnData(googleData, espnData = null) {
       ...googleData.meta,
       espnLeagueUrl: ESPN_LEAGUE_URL,
       espnLive: Boolean(espnData),
+      waiverDataAvailable,
       syncMode: espnData ? "live-google-sheets-and-espn" : "live-google-sheets-espn-fallback",
       syncedAt: new Date().toISOString(),
-      schemaVersion: 2,
+      schemaVersion: 3,
     },
     teams: teams.map(({ oldTeam, ...team }) => team),
+    waivers: {
+      source: "espn",
+      available: waiverDataAvailable,
+      totalClaims: teams.reduce((sum, team) => sum + team.waiverClaims, 0),
+      lastProcessedAt: espnData?.status?.waiverLastExecutionDate || null,
+    },
     buyIns,
     schedule,
     playoffs: { games: playoffGames, placements },
@@ -302,10 +328,14 @@ export async function loadEspnLeagueData() {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15_000);
   try {
-    const response = await fetch(ESPN_API_URL, { cache: "no-store", signal: controller.signal });
+    const response = await fetch(ESPN_API_URL, {
+      cache: "no-store",
+      headers: { "x-fantasy-filter": ESPN_API_FILTER },
+      signal: controller.signal,
+    });
     if (!response.ok) throw new Error(`ESPN returned ${response.status}.`);
     const data = await response.json();
-    if (!Array.isArray(data.teams) || !Array.isArray(data.schedule)) {
+    if (!Array.isArray(data.teams) || !Array.isArray(data.schedule) || !Array.isArray(data.transactions)) {
       throw new Error("ESPN returned incomplete league data.");
     }
     return data;
@@ -588,7 +618,13 @@ export async function loadGoogleSheetData() {
   );
   const googleData = parseGoogleSheetData(sourceTables);
   const espnSignature = espnResult
-    ? stableHash(JSON.stringify({ teams: espnResult.teams, schedule: espnResult.schedule }))
+    ? stableHash(
+        JSON.stringify({
+          teams: espnResult.teams,
+          schedule: espnResult.schedule,
+          transactions: espnResult.transactions,
+        }),
+      )
     : "espn-fallback";
   return {
     data: mergeEspnData(googleData, espnResult),

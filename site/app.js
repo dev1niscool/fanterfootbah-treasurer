@@ -363,6 +363,86 @@ function renderTeamCards(query = "") {
     : '<div class="no-results">No team or owner matches that search.</div>';
 }
 
+function renderWaivers() {
+  const teams = state.data.summary.map((team) => ({
+    ...team,
+    waiverClaims: Number(team.waiverClaims) || 0,
+  }));
+  const waiverDataAvailable = Boolean(state.data.waivers?.available);
+  const totalClaims = teams.reduce((sum, team) => sum + team.waiverClaims, 0);
+  const total = $("#waiver-total");
+  const leaderboard = $("#waiver-leaderboard");
+  const shame = $("#waiver-shame");
+  const shameNote = $("#waiver-shame-note");
+
+  if (!waiverDataAvailable) {
+    total.innerHTML = "<strong>—</strong><span>ESPN temporarily unavailable</span>";
+    leaderboard.innerHTML = '<div class="waiver-unavailable"><strong>Waiver data is taking a timeout.</strong><span>The saved league data is still available.</span></div>';
+    shame.innerHTML = '<div class="waiver-no-shame"><strong>?</strong><h4>No verdict</h4><p>The cellar reopens when ESPN reconnects.</p></div>';
+    shameNote.textContent = "";
+    return;
+  }
+
+  total.innerHTML = `<strong>${totalClaims}</strong><span>claim${totalClaims === 1 ? "" : "s"} submitted</span>`;
+  const standings = [...teams].sort(
+    (a, b) => b.waiverClaims - a.waiverClaims || a.team.localeCompare(b.team),
+  );
+  const maxClaims = Math.max(1, ...standings.map((team) => team.waiverClaims));
+  let priorClaims = null;
+  let currentRank = 0;
+
+  const zeroBanner = totalClaims === 0
+    ? '<div class="waiver-zero-banner"><strong>The wire is untouched.</strong><span>Everybody starts tied at zero.</span></div>'
+    : "";
+  leaderboard.innerHTML = `${zeroBanner}${standings
+    .map((team, index) => {
+      if (team.waiverClaims !== priorClaims) currentRank = index + 1;
+      priorClaims = team.waiverClaims;
+      const share = (team.waiverClaims / maxClaims) * 100;
+      return `
+        <div class="waiver-row${team.owner === state.activeOwner ? " is-you" : ""}" style="--waiver-share: ${share}%">
+          <span class="waiver-rank${currentRank === 1 ? " is-top" : ""}">${currentRank}</span>
+          <div class="waiver-team">
+            ${teamAvatar(team)}
+            <span><strong>${escapeHtml(team.team)}</strong><small>${escapeHtml(team.owner)}${team.owner === state.activeOwner ? " · You" : ""}</small></span>
+          </div>
+          <span class="waiver-bar" aria-hidden="true"><i></i></span>
+          <span class="waiver-count"><strong>${team.waiverClaims}</strong><small>claim${team.waiverClaims === 1 ? "" : "s"}</small></span>
+        </div>
+      `;
+    })
+    .join("")}`;
+
+  if (totalClaims === 0) {
+    shame.innerHTML = '<div class="waiver-no-shame"><strong>0</strong><h4>No shame yet</h4><p>Nobody gets dragged before the first claim.</p></div>';
+    shameNote.textContent = "All 16 teams are tied.";
+    return;
+  }
+
+  const bottom = [...teams].sort(
+    (a, b) => a.waiverClaims - b.waiverClaims || a.team.localeCompare(b.team),
+  );
+  const bottomThree = bottom.slice(0, 3);
+  const cutoffClaims = bottomThree.at(-1)?.waiverClaims ?? 0;
+  const teamsAtCutoff = bottom.filter((team) => team.waiverClaims === cutoffClaims).length;
+  const cellarLabels = ["Deepest in the cellar", "Still down here", "Barely moving"];
+  shame.innerHTML = bottomThree
+    .map(
+      (team, index) => `
+        <article class="waiver-shame-card">
+          <span class="waiver-shame-rank">${index + 1}</span>
+          ${teamAvatar(team, "shame-avatar")}
+          <div><small>${cellarLabels[index]}</small><strong>${escapeHtml(team.team)}</strong><span>${escapeHtml(team.owner)}</span></div>
+          <b>${team.waiverClaims}<small> claim${team.waiverClaims === 1 ? "" : "s"}</small></b>
+        </article>
+      `,
+    )
+    .join("");
+  shameNote.textContent = teamsAtCutoff > 1
+    ? `${teamsAtCutoff} teams are tied at ${cutoffClaims}; three are shown alphabetically.`
+    : "The cellar updates automatically with ESPN.";
+}
+
 function matchupTeam(team, winner, score, showScore) {
   return `
     <div class="matchup-team${team && team === winner ? " is-winner" : ""}">
@@ -668,6 +748,7 @@ function renderPersonalizedViews() {
   renderQuickStrip();
   renderOverview();
   renderTeamCards($("#team-search").value);
+  renderWaivers();
   renderLockerForOwner(state.activeOwner);
 }
 
@@ -784,6 +865,7 @@ async function init() {
     renderSchedule();
     renderPlayoffs();
     renderPotSplit({ animate: state.activeTab === "pot-split" });
+    renderWaivers();
     setupOwnerExperience();
     if (!state.activeOwner) {
       renderOverview();
