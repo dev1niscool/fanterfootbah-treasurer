@@ -1,6 +1,4 @@
 export const GOOGLE_SHEET_ID = "1NtRDgw3Jzo5HtB4zU-lnx5niiFDKfPLJww4ToEjqsHg";
-export const GOOGLE_SHEET_URL = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/edit?usp=sharing`;
-export const ESPN_LEAGUE_URL = "https://fantasy.espn.com/football/league?leagueId=635040019";
 export const ESPN_API_URL =
   "https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/2026/segments/0/leagues/635040019?view=mTeam&view=mMatchup&view=mStandings&view=mSettings&view=mTransactions2";
 export const ESPN_API_FILTER = JSON.stringify({
@@ -13,22 +11,22 @@ export const ESPN_API_FILTER = JSON.stringify({
 });
 
 const ESPN_TEAM_FALLBACK = [
-  { id: 1, abbrev: "Joe!", name: "Bobsondinho's Revenge", owner: "Joe Berni" },
-  { id: 2, abbrev: "NEWM", name: "Big Body Newms", owner: "Ethan Newman" },
-  { id: 3, abbrev: "AAAa", name: "brazil bru h", owner: "Reid Miller" },
-  { id: 4, abbrev: "W", name: "Big Chungus", owner: "Will Dolan" },
-  { id: 5, abbrev: "BEAN", name: "Hot Dog U Bean Eaters", owner: "Gabe Gross" },
-  { id: 6, abbrev: "BALz", name: "Ball Fondilers", owner: "Tyler Buganski" },
-  { id: 7, abbrev: "UHHH", name: "Futbol Experts", owner: "Christopher Morey" },
-  { id: 8, abbrev: "MMT", name: "Autism Speaks", owner: "Michael Moen" },
-  { id: 9, abbrev: "BEN", name: "Courtland Sutton", owner: "Ben Fletcher" },
-  { id: 10, abbrev: "Nick", name: "Tung Tung Shakir", owner: "Nicholas Fletcher" },
-  { id: 11, abbrev: "MEOW", name: "It was a G.I. Jane joke", owner: "Brendan Smith" },
-  { id: 12, abbrev: ":P", name: "DeVinta Smith", owner: "Devin Kancherla" },
-  { id: 13, abbrev: "HAWK", name: "Hawk Tuah Hit Squad", owner: "Brogan Trout" },
-  { id: 14, abbrev: "Frr", name: "Free Rashee Rice", owner: "Mark Sommer" },
-  { id: 15, abbrev: "WRM", name: "wupwtw", owner: "Aaron Cole" },
-  { id: 16, abbrev: "BHG", name: "Big Hog Gabe", owner: "Gabe Kemna" },
+  { id: 1, abbrev: "Joe!", name: "Bobsondinho's Revenge" },
+  { id: 2, abbrev: "NEWM", name: "Big Body Newms" },
+  { id: 3, abbrev: "AAAa", name: "brazil bru h" },
+  { id: 4, abbrev: "W", name: "Big Chungus" },
+  { id: 5, abbrev: "BEAN", name: "Hot Dog U Bean Eaters" },
+  { id: 6, abbrev: "BALz", name: "Ball Fondilers" },
+  { id: 7, abbrev: "UHHH", name: "Futbol Experts" },
+  { id: 8, abbrev: "MMT", name: "Autism Speaks" },
+  { id: 9, abbrev: "BEN", name: "Courtland Sutton" },
+  { id: 10, abbrev: "Nick", name: "Tung Tung Shakir" },
+  { id: 11, abbrev: "MEOW", name: "It was a G.I. Jane joke" },
+  { id: 12, abbrev: ":P", name: "DeVinta Smith" },
+  { id: 13, abbrev: "HAWK", name: "Hawk Tuah Hit Squad" },
+  { id: 14, abbrev: "Frr", name: "Free Rashee Rice" },
+  { id: 15, abbrev: "WRM", name: "wupwtw" },
+  { id: 16, abbrev: "BHG", name: "Big Hog Gabe" },
 ];
 
 const ESPN_2025_WIRE_ADDS = [
@@ -133,7 +131,7 @@ function safeImageUrl(value) {
 function canonicalTeamMap(googleData, espnData) {
   const fallbackById = new Map(ESPN_TEAM_FALLBACK.map((team) => [team.id, team]));
   const liveById = new Map((espnData?.teams || []).map((team) => [team.id, team]));
-  const googleByOwner = new Map(googleData.teams.map((team) => [team.owner, team]));
+  const googleBySlot = new Map(googleData.teams.map((team) => [team.slotId, team]));
   const wireAddsByTeam = new Map();
   (espnData?.transactions || [])
     .filter((transaction) => ["WAIVER", "FREEAGENT"].includes(transaction.type))
@@ -148,7 +146,7 @@ function canonicalTeamMap(googleData, espnData) {
 
   return ESPN_TEAM_FALLBACK.map((fallback) => {
     const live = liveById.get(fallback.id);
-    const google = googleByOwner.get(fallback.owner);
+    const google = googleBySlot.get(fallback.id);
     const overall = live?.record?.overall || {};
     const wireAdds = wireAddsByTeam.get(fallback.id);
     const waiverClaims = Array.isArray(espnData?.transactions)
@@ -159,7 +157,6 @@ function canonicalTeamMap(googleData, espnData) {
       : asNumber(google?.freeAgentAdds);
     return {
       team: asText(live?.name) || fallback.name,
-      owner: fallback.owner,
       active: google?.active !== false,
       espnTeamId: fallback.id,
       abbreviation: asText(live?.abbrev) || fallback.abbrev,
@@ -192,7 +189,6 @@ export function mergeEspnData(googleData, espnData = null) {
     return {
       season: 2025,
       team: historical.team,
-      owner: current?.owner || ESPN_TEAM_FALLBACK.find((team) => team.id === historical.id)?.owner || "",
       espnTeamId: historical.id,
       abbreviation: current?.abbreviation || ESPN_TEAM_FALLBACK.find((team) => team.id === historical.id)?.abbrev || "",
       logo: current?.logo || null,
@@ -206,7 +202,6 @@ export function mergeEspnData(googleData, espnData = null) {
     canonicalByOldName.set(ESPN_TEAM_FALLBACK.find((fallback) => fallback.id === team.espnTeamId)?.name, team.team);
     canonicalByOldName.set(team.team, team.team);
   });
-  const teamByOwner = new Map(teams.map((team) => [team.owner, team]));
   const financeByWeekGame = new Map(
     googleData.schedule.map((game) => [`${game.week}:${game.game}`, game]),
   );
@@ -220,10 +215,11 @@ export function mergeEspnData(googleData, espnData = null) {
   const gamesPerWeek = new Map();
   const schedule = (liveSchedule || googleData.schedule).map((sourceGame, index) => {
     if (!liveSchedule) {
+      const { notes: _privateNotes, ...publicGame } = sourceGame;
       const awayTeam = canonicalByOldName.get(sourceGame.awayTeam) || sourceGame.awayTeam;
       const homeTeam = canonicalByOldName.get(sourceGame.homeTeam) || sourceGame.homeTeam;
       return {
-        ...sourceGame,
+        ...publicGame,
         awayTeam,
         homeTeam,
         winner: canonicalByOldName.get(sourceGame.winner) || sourceGame.winner,
@@ -263,14 +259,15 @@ export function mergeEspnData(googleData, espnData = null) {
       paid,
       amountPaid,
       outstanding: roundMoney(Math.max(0, cashPayout - amountPaid)),
-      notes: asText(manualFinance.notes),
       source: "espn",
     };
   });
 
-  const buyIns = googleData.buyIns.map((buyIn) => {
-    const canonical = teamByOwner.get(buyIn.owner);
-    return { ...buyIn, team: canonical?.team || canonicalByOldName.get(buyIn.team) || buyIn.team };
+  const buyIns = googleData.buyIns.map((buyIn, index) => {
+    const { notes: _privateNotes, ...publicBuyIn } = buyIn;
+    const slotId = buyIn.slotId || index + 1;
+    const canonical = byId.get(slotId);
+    return { ...publicBuyIn, slotId, team: canonical?.team || canonicalByOldName.get(buyIn.team) || buyIn.team };
   });
 
   const placements = googleData.playoffs.placements.map((placement) => ({
@@ -284,7 +281,7 @@ export function mergeEspnData(googleData, espnData = null) {
     winner: canonicalByOldName.get(game.winner) || game.winner,
   }));
 
-  const buyInByOwner = new Map(buyIns.map((entry) => [entry.owner, entry]));
+  const buyInBySlot = new Map(buyIns.map((entry) => [entry.slotId, entry]));
   const placementByTeam = new Map(placements.filter((entry) => entry.team).map((entry) => [entry.team, entry]));
   const summary = teams.map((teamEntry) => {
     const teamGames = schedule.filter(
@@ -302,7 +299,7 @@ export function mergeEspnData(googleData, espnData = null) {
     const playoffPaid = placement?.paid ? playoffPrize : 0;
     const totalEarnings = roundMoney(regularSeasonEarnings + playoffPrize);
     const winningsPaid = roundMoney(regularSeasonPaid + playoffPaid);
-    const buyIn = buyInByOwner.get(teamEntry.owner) || {
+    const buyIn = buyInBySlot.get(teamEntry.espnTeamId) || {
       due: googleData.finances.buyInPerTeam,
       paid: false,
       amountCollected: 0,
@@ -336,12 +333,11 @@ export function mergeEspnData(googleData, espnData = null) {
     ...googleData,
     meta: {
       ...googleData.meta,
-      espnLeagueUrl: ESPN_LEAGUE_URL,
       espnLive: Boolean(espnData),
       waiverDataAvailable,
       syncMode: espnData ? "live-google-sheets-and-espn" : "live-google-sheets-espn-fallback",
       syncedAt: new Date().toISOString(),
-      schemaVersion: 4,
+      schemaVersion: 5,
     },
     teams: teams.map(({ oldTeam, ...team }) => team),
     waivers: {
@@ -462,11 +458,11 @@ export function parseGoogleSheetData(sourceTables) {
   const teams = [];
   for (let rowIndex = teamHeader + 1; rowIndex < setupRows.length; rowIndex += 1) {
     const team = asText(setupRows[rowIndex][3]);
-    const owner = asText(setupRows[rowIndex][4]);
-    if (!team || !owner) break;
+    const hasManager = Boolean(asText(setupRows[rowIndex][4]));
+    if (!team || !hasManager) break;
     teams.push({
+      slotId: teams.length + 1,
       team,
-      owner,
       active: asText(setupRows[rowIndex][5]).toLocaleLowerCase() !== "no",
     });
   }
@@ -482,8 +478,8 @@ export function parseGoogleSheetData(sourceTables) {
     const paid = isChecked(buyInRows[rowIndex][3]);
     const amountCollected = asNumber(buyInRows[rowIndex][5], paid ? due : 0);
     buyIns.push({
+      slotId: buyIns.length + 1,
       team,
-      owner: asText(buyInRows[rowIndex][1]),
       due,
       paid,
       datePaid: googleDate(buyInRows[rowIndex][4]),
@@ -569,7 +565,7 @@ export function parseGoogleSheetData(sourceTables) {
     });
   }
 
-  const buyInByTeam = new Map(buyIns.map((entry) => [entry.team, entry]));
+  const buyInBySlot = new Map(buyIns.map((entry) => [entry.slotId, entry]));
   const placementByTeam = new Map(placements.filter((entry) => entry.team).map((entry) => [entry.team, entry]));
   const defaultBuyIn = asNumber(assumptions["Buy-In Per Team"], 30);
 
@@ -588,7 +584,7 @@ export function parseGoogleSheetData(sourceTables) {
     const playoffPaid = placement?.paid ? playoffPrize : 0;
     const totalEarnings = roundMoney(regularSeasonEarnings + playoffPrize);
     const winningsPaid = roundMoney(regularSeasonPaid + playoffPaid);
-    const buyIn = buyInByTeam.get(teamEntry.team) ?? {
+    const buyIn = buyInBySlot.get(teamEntry.slotId) ?? {
       due: defaultBuyIn,
       paid: false,
       amountCollected: 0,
@@ -597,7 +593,7 @@ export function parseGoogleSheetData(sourceTables) {
 
     return {
       team: teamEntry.team,
-      owner: teamEntry.owner,
+      slotId: teamEntry.slotId,
       active: teamEntry.active,
       buyInDue: roundMoney(buyIn.due),
       buyInPaid: Boolean(buyIn.paid),
@@ -625,11 +621,10 @@ export function parseGoogleSheetData(sourceTables) {
   return {
     meta: {
       leagueName: "FanterFootbah",
-      sourceUrl: GOOGLE_SHEET_URL,
       workbookName: "FanterFootbah Treasurer Tracker",
       syncedAt: new Date().toISOString(),
       syncMode: "live-google-sheets",
-      schemaVersion: 1,
+      schemaVersion: 5,
     },
     season: {
       label: "2026",

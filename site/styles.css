@@ -916,7 +916,7 @@ td {
   letter-spacing: -0.025em;
 }
 
-.team-card .owner-name {
+.team-card .team-code {
   margin: 0;
   color: var(--ink-soft);
   font-size: 12px;
@@ -1271,11 +1271,11 @@ td {
   line-height: 1.55;
 }
 
-.owner-select-field span {
+.team-select-field span {
   color: rgba(255, 255, 255, 0.52);
 }
 
-.owner-select-field select {
+.team-select-field select {
   width: 100%;
   min-height: 54px;
   border-color: rgba(255, 255, 255, 0.15);
@@ -1283,7 +1283,7 @@ td {
   background: rgba(255, 255, 255, 0.09);
 }
 
-.owner-select-field select option {
+.team-select-field select option {
   color: var(--ink);
   background: white;
 }
@@ -1671,7 +1671,7 @@ footer p {
     padding: 30px;
   }
 
-  .owner-select-field {
+  .team-select-field {
     width: 100%;
   }
 }
@@ -1879,7 +1879,7 @@ body.is-booting .buyin-toggle {
   line-height: 1.45;
 }
 
-.owner-chip {
+.team-chip {
   display: inline-flex;
   align-items: center;
   min-height: 38px;
@@ -1894,7 +1894,7 @@ body.is-booting .buyin-toggle {
   font-weight: 800;
 }
 
-.owner-chip > span:first-child {
+.team-chip > span:first-child {
   position: relative;
   display: grid;
   width: 28px;
@@ -1907,11 +1907,11 @@ body.is-booting .buyin-toggle {
   font-size: 9px;
 }
 
-#header-owner-initials .team-avatar-image {
+#header-team-logo .team-avatar-image {
   padding: 1px;
 }
 
-#header-owner-initials .team-avatar-image.is-custom {
+#header-team-logo .team-avatar-image.is-custom {
   padding: 0;
 }
 
@@ -2226,11 +2226,11 @@ tr.is-you td {
   color: var(--ink-soft);
 }
 
-.owner-select-field span {
+.team-select-field span {
   color: var(--ink-soft);
 }
 
-.owner-select-field select {
+.team-select-field select {
   min-height: 48px;
   border-color: rgba(20, 36, 28, 0.14);
   color: var(--ink);
@@ -3151,11 +3151,11 @@ body.is-signing-in .buyin-toggle {
     gap: 12px;
   }
 
-  .owner-chip > span:last-child {
+  .team-chip > span:last-child {
     display: none;
   }
 
-  .owner-chip {
+  .team-chip {
     padding-right: 5px;
   }
 

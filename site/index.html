@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="FanterFootbah league dues, payouts, schedule, playoff prizes, and personalized owner stats."
+      content="FanterFootbah league dues, payouts, schedule, playoff prizes, and personalized team stats."
     />
     <meta name="theme-color" content="#101d17" />
     <title>FanterFootbah · Treasurer Room</title>
@@ -18,12 +18,12 @@
       <div class="welcome-card">
         <span class="welcome-ball" aria-hidden="true">FF</span>
         <p class="eyebrow">FanterFootbah · 2026</p>
-        <h1 id="welcome-title" tabindex="-1">Who’s checking the league?</h1>
-        <p>Choose your real name once. Your dashboard will open with your team and numbers ready.</p>
+        <h1 id="welcome-title" tabindex="-1">Which team are you?</h1>
+        <p>Choose your team once. Your dashboard will open with its numbers ready.</p>
         <label class="signin-select">
-          <span>Your name</span>
-          <select id="signin-owner-select">
-            <option value="">Choose an owner…</option>
+          <span>Your team</span>
+          <select id="signin-team-select">
+            <option value="">Choose a team…</option>
           </select>
         </label>
         <button class="button button-primary welcome-enter" id="enter-dashboard" type="button" disabled>
@@ -50,19 +50,10 @@
             <span class="sync-dot" aria-hidden="true"></span>
             <span id="sync-label">Loading league data…</span>
           </span>
-          <button class="owner-chip" id="switch-owner" type="button" title="Switch owner">
-            <span id="header-owner-initials" aria-hidden="true">FF</span>
-            <span id="header-owner-name">Choose owner</span>
+          <button class="team-chip" id="switch-team" type="button" title="Switch team">
+            <span id="header-team-logo" aria-hidden="true">FF</span>
+            <span id="header-team-name">Choose team</span>
           </button>
-          <a
-            class="icon-link"
-            href="https://fantasy.espn.com/football/league?leagueId=635040019"
-            target="_blank"
-            rel="noreferrer"
-          >
-            ESPN league
-            <span aria-hidden="true">↗</span>
-          </a>
         </div>
       </header>
 
@@ -70,8 +61,8 @@
         <section class="quick-strip" aria-labelledby="league-title">
           <div class="quick-welcome">
             <p class="eyebrow">Your 2026 league room</p>
-            <h1 id="league-title">Welcome back, <span id="welcome-owner">owner</span>.</h1>
-            <p id="welcome-team">Your team is loading…</p>
+            <h1 id="league-title">Welcome back, <span id="welcome-team-name">team</span>.</h1>
+            <p id="welcome-team-summary">Your dashboard is loading…</p>
           </div>
           <div class="quick-stat-grid" aria-label="Your quick stats">
             <button class="quick-stat" type="button" data-jump-tab="my-locker">
@@ -81,7 +72,7 @@
               <span id="welcome-earnings-label">Earnings</span><strong id="welcome-earnings">$0</strong>
             </button>
             <button class="quick-stat" type="button" data-jump-tab="teams">
-              <span>ESPN points</span><strong id="welcome-points">0.0</strong>
+              <span>League points</span><strong id="welcome-points">0.0</strong>
             </button>
           </div>
         </section>
@@ -136,7 +127,7 @@
                       <th scope="col">Rank</th>
                       <th scope="col">Team</th>
                       <th scope="col">Wins</th>
-                      <th scope="col">ESPN pts</th>
+                      <th scope="col">League pts</th>
                       <th scope="col" id="leaderboard-money-heading">Earnings</th>
                     </tr>
                   </thead>
@@ -152,7 +143,6 @@
                 <p class="eyebrow">Treasurer desk</p>
                 <h2>League at a glance</h2>
               </div>
-              <a class="text-link" href="https://docs.google.com/spreadsheets/d/1NtRDgw3Jzo5HtB4zU-lnx5niiFDKfPLJww4ToEjqsHg/edit?usp=sharing" target="_blank" rel="noreferrer">Open money sheet ↗</a>
             </div>
             <div class="metric-grid" id="overview-metrics"></div>
           </section>
@@ -164,9 +154,9 @@
                 <h2>Teams & buy-ins</h2>
               </div>
               <label class="search-box">
-                <span class="visually-hidden">Search teams or owners</span>
+                <span class="visually-hidden">Search teams</span>
                 <span aria-hidden="true">⌕</span>
-                <input id="team-search" type="search" placeholder="Search a team or owner" autocomplete="off" />
+                <input id="team-search" type="search" placeholder="Search a team" autocomplete="off" />
               </label>
             </div>
             <div class="team-grid" id="team-grid"></div>
@@ -289,10 +279,10 @@
                 <h2>How are <em>you</em> doing?</h2>
                 <p>Your team’s season, payments, results, and earnings in one place.</p>
               </div>
-              <label class="select-field owner-select-field">
-                <span>Select your name</span>
-                <select id="owner-select">
-                  <option value="">Choose an owner…</option>
+              <label class="select-field team-select-field">
+                <span>Select your team</span>
+                <select id="team-select">
+                  <option value="">Choose a team…</option>
                 </select>
               </label>
             </div>
@@ -306,7 +296,7 @@
           <strong>FanterFootbah</strong>
           <span>Receipts kept. Drama optional.</span>
         </div>
-        <p id="footer-sync">Connecting to the live Google Sheet.</p>
+        <p id="footer-sync">Connecting to live league data.</p>
       </footer>
     </div>
 

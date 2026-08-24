@@ -1,12 +1,10 @@
 {
   "meta": {
     "leagueName": "FanterFootbah",
-    "sourceUrl": "https://docs.google.com/spreadsheets/d/1NtRDgw3Jzo5HtB4zU-lnx5niiFDKfPLJww4ToEjqsHg/edit?usp=sharing",
     "workbookName": "FanterFootbah Treasurer Tracker",
-    "syncedAt": "2026-08-23T03:51:56.848Z",
+    "syncedAt": "2026-08-24T18:41:01.701Z",
     "syncMode": "live-google-sheets-and-espn",
-    "schemaVersion": 4,
-    "espnLeagueUrl": "https://fantasy.espn.com/football/league?leagueId=635040019",
+    "schemaVersion": 5,
     "espnLive": true,
     "waiverDataAvailable": true
   },
@@ -32,7 +30,6 @@
   "teams": [
     {
       "team": "Bobsondinho's Revenge",
-      "owner": "Joe Berni",
       "active": true,
       "espnTeamId": 1,
       "abbreviation": "Joe!",
@@ -50,7 +47,6 @@
     },
     {
       "team": "Big Body Newms",
-      "owner": "Ethan Newman",
       "active": true,
       "espnTeamId": 2,
       "abbreviation": "NEWM",
@@ -68,7 +64,6 @@
     },
     {
       "team": "brazil bru h",
-      "owner": "Reid Miller",
       "active": true,
       "espnTeamId": 3,
       "abbreviation": "AAAa",
@@ -86,7 +81,6 @@
     },
     {
       "team": "Big Chungus",
-      "owner": "Will Dolan",
       "active": true,
       "espnTeamId": 4,
       "abbreviation": "W",
@@ -104,7 +98,6 @@
     },
     {
       "team": "Hot Dog U Bean Eaters",
-      "owner": "Gabe Gross",
       "active": true,
       "espnTeamId": 5,
       "abbreviation": "BEAN",
@@ -122,7 +115,6 @@
     },
     {
       "team": "Ball Fondilers",
-      "owner": "Tyler Buganski",
       "active": true,
       "espnTeamId": 6,
       "abbreviation": "BALz",
@@ -140,7 +132,6 @@
     },
     {
       "team": "Futbol Experts",
-      "owner": "Christopher Morey",
       "active": true,
       "espnTeamId": 7,
       "abbreviation": "UHHH",
@@ -158,7 +149,6 @@
     },
     {
       "team": "Autism Speaks",
-      "owner": "Michael Moen",
       "active": true,
       "espnTeamId": 8,
       "abbreviation": "MMT",
@@ -176,7 +166,6 @@
     },
     {
       "team": "Courtland Sutton",
-      "owner": "Ben Fletcher",
       "active": true,
       "espnTeamId": 9,
       "abbreviation": "BEN",
@@ -194,7 +183,6 @@
     },
     {
       "team": "Tung Tung Shakir",
-      "owner": "Nicholas Fletcher",
       "active": true,
       "espnTeamId": 10,
       "abbreviation": "Nick",
@@ -212,7 +200,6 @@
     },
     {
       "team": "It was a G.I. Jane joke",
-      "owner": "Brendan Smith",
       "active": true,
       "espnTeamId": 11,
       "abbreviation": "MEOW",
@@ -230,7 +217,6 @@
     },
     {
       "team": "DeVinta Smith",
-      "owner": "Devin Kancherla",
       "active": true,
       "espnTeamId": 12,
       "abbreviation": ":P",
@@ -242,13 +228,12 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 5,
-      "waiverClaims": 0,
-      "freeAgentAdds": 0,
-      "wireAdds": 0
+      "waiverClaims": 1,
+      "freeAgentAdds": 1,
+      "wireAdds": 2
     },
     {
       "team": "Hawk Tuah Hit Squad",
-      "owner": "Brogan Trout",
       "active": true,
       "espnTeamId": 13,
       "abbreviation": "HAWK",
@@ -266,7 +251,6 @@
     },
     {
       "team": "Free Rashee Rice",
-      "owner": "Mark Sommer",
       "active": true,
       "espnTeamId": 14,
       "abbreviation": "Frr",
@@ -284,7 +268,6 @@
     },
     {
       "team": "wupwtw",
-      "owner": "Aaron Cole",
       "active": true,
       "espnTeamId": 15,
       "abbreviation": "WRM",
@@ -302,7 +285,6 @@
     },
     {
       "team": "Big Hog Gabe",
-      "owner": "Gabe Kemna",
       "active": true,
       "espnTeamId": 16,
       "abbreviation": "BHG",
@@ -321,164 +303,148 @@
   ],
   "buyIns": [
     {
+      "slotId": 1,
       "team": "Bobsondinho's Revenge",
-      "owner": "Joe Berni",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 2,
       "team": "Big Body Newms",
-      "owner": "Ethan Newman",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 3,
       "team": "brazil bru h",
-      "owner": "Reid Miller",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 4,
       "team": "Big Chungus",
-      "owner": "Will Dolan",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 5,
       "team": "Hot Dog U Bean Eaters",
-      "owner": "Gabe Gross",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 6,
       "team": "Ball Fondilers",
-      "owner": "Tyler Buganski",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 7,
       "team": "Futbol Experts",
-      "owner": "Christopher Morey",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 8,
       "team": "Autism Speaks",
-      "owner": "Michael Moen",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 9,
       "team": "Courtland Sutton",
-      "owner": "Ben Fletcher",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 10,
       "team": "Tung Tung Shakir",
-      "owner": "Nicholas Fletcher",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 11,
       "team": "It was a G.I. Jane joke",
-      "owner": "Brendan Smith",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 12,
       "team": "DeVinta Smith",
-      "owner": "Devin Kancherla",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 13,
       "team": "Hawk Tuah Hit Squad",
-      "owner": "Brogan Trout",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 14,
       "team": "Free Rashee Rice",
-      "owner": "Mark Sommer",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 15,
       "team": "wupwtw",
-      "owner": "Aaron Cole",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     },
     {
+      "slotId": 16,
       "team": "Big Hog Gabe",
-      "owner": "Gabe Kemna",
       "due": 30,
       "paid": true,
       "datePaid": null,
       "amountCollected": 30,
-      "outstanding": 0,
-      "notes": ""
+      "outstanding": 0
     }
   ],
   "schedule": [
@@ -499,7 +465,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -519,7 +484,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -539,7 +503,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -559,7 +522,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -579,7 +541,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -599,7 +560,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -619,7 +579,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -639,7 +598,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -659,7 +617,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -679,7 +636,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -699,7 +655,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -719,7 +674,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -739,7 +693,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -759,7 +712,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -779,7 +731,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -799,7 +750,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -819,7 +769,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -839,7 +788,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -859,7 +807,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -879,7 +826,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -899,7 +845,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -919,7 +864,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -939,7 +883,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -959,7 +902,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -979,7 +921,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -999,7 +940,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1019,7 +959,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1039,7 +978,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1059,7 +997,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1079,7 +1016,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1099,7 +1035,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1119,7 +1054,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1139,7 +1073,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1159,7 +1092,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1179,7 +1111,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1199,7 +1130,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1219,7 +1149,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1239,7 +1168,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1259,7 +1187,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1279,7 +1206,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1299,7 +1225,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1319,7 +1244,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1339,7 +1263,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1359,7 +1282,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1379,7 +1301,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1399,7 +1320,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1419,7 +1339,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1439,7 +1358,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1459,7 +1377,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1479,7 +1396,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1499,7 +1415,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1519,7 +1434,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1539,7 +1453,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1559,7 +1472,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1579,7 +1491,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1599,7 +1510,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1619,7 +1529,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1639,7 +1548,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1659,7 +1567,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1679,7 +1586,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1699,7 +1605,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1719,7 +1624,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1739,7 +1643,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1759,7 +1662,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1779,7 +1681,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1799,7 +1700,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1819,7 +1719,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1839,7 +1738,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1859,7 +1757,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1879,7 +1776,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1899,7 +1795,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1919,7 +1814,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1939,7 +1833,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1959,7 +1852,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1979,7 +1871,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -1999,7 +1890,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2019,7 +1909,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2039,7 +1928,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2059,7 +1947,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2079,7 +1966,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2099,7 +1985,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2119,7 +2004,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2139,7 +2023,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2159,7 +2042,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2179,7 +2061,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2199,7 +2080,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2219,7 +2099,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2239,7 +2118,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2259,7 +2137,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2279,7 +2156,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2299,7 +2175,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2319,7 +2194,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2339,7 +2213,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2359,7 +2232,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2379,7 +2251,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2399,7 +2270,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2419,7 +2289,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2439,7 +2308,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2459,7 +2327,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2479,7 +2346,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2499,7 +2365,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2519,7 +2384,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2539,7 +2403,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2559,7 +2422,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2579,7 +2441,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2599,7 +2460,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2619,7 +2479,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2639,7 +2498,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2659,7 +2517,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2679,7 +2536,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2699,7 +2555,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     },
     {
@@ -2719,7 +2574,6 @@
       "paid": false,
       "amountPaid": 0,
       "outstanding": 0,
-      "notes": "",
       "source": "espn"
     }
   ],
@@ -2833,7 +2687,6 @@
   "summary": [
     {
       "team": "Bobsondinho's Revenge",
-      "owner": "Joe Berni",
       "active": true,
       "espnTeamId": 1,
       "abbreviation": "Joe!",
@@ -2866,7 +2719,6 @@
     },
     {
       "team": "Big Body Newms",
-      "owner": "Ethan Newman",
       "active": true,
       "espnTeamId": 2,
       "abbreviation": "NEWM",
@@ -2899,7 +2751,6 @@
     },
     {
       "team": "brazil bru h",
-      "owner": "Reid Miller",
       "active": true,
       "espnTeamId": 3,
       "abbreviation": "AAAa",
@@ -2932,7 +2783,6 @@
     },
     {
       "team": "Big Chungus",
-      "owner": "Will Dolan",
       "active": true,
       "espnTeamId": 4,
       "abbreviation": "W",
@@ -2965,7 +2815,6 @@
     },
     {
       "team": "Hot Dog U Bean Eaters",
-      "owner": "Gabe Gross",
       "active": true,
       "espnTeamId": 5,
       "abbreviation": "BEAN",
@@ -2998,7 +2847,6 @@
     },
     {
       "team": "Ball Fondilers",
-      "owner": "Tyler Buganski",
       "active": true,
       "espnTeamId": 6,
       "abbreviation": "BALz",
@@ -3031,7 +2879,6 @@
     },
     {
       "team": "Futbol Experts",
-      "owner": "Christopher Morey",
       "active": true,
       "espnTeamId": 7,
       "abbreviation": "UHHH",
@@ -3064,7 +2911,6 @@
     },
     {
       "team": "Autism Speaks",
-      "owner": "Michael Moen",
       "active": true,
       "espnTeamId": 8,
       "abbreviation": "MMT",
@@ -3097,7 +2943,6 @@
     },
     {
       "team": "Courtland Sutton",
-      "owner": "Ben Fletcher",
       "active": true,
       "espnTeamId": 9,
       "abbreviation": "BEN",
@@ -3130,7 +2975,6 @@
     },
     {
       "team": "Tung Tung Shakir",
-      "owner": "Nicholas Fletcher",
       "active": true,
       "espnTeamId": 10,
       "abbreviation": "Nick",
@@ -3163,7 +3007,6 @@
     },
     {
       "team": "It was a G.I. Jane joke",
-      "owner": "Brendan Smith",
       "active": true,
       "espnTeamId": 11,
       "abbreviation": "MEOW",
@@ -3196,7 +3039,6 @@
     },
     {
       "team": "DeVinta Smith",
-      "owner": "Devin Kancherla",
       "active": true,
       "espnTeamId": 12,
       "abbreviation": ":P",
@@ -3208,9 +3050,9 @@
       "espnLosses": 0,
       "espnTies": 0,
       "playoffSeed": 5,
-      "waiverClaims": 0,
-      "freeAgentAdds": 0,
-      "wireAdds": 0,
+      "waiverClaims": 1,
+      "freeAgentAdds": 1,
+      "wireAdds": 2,
       "buyInDue": 30,
       "buyInPaid": true,
       "buyInCollected": 30,
@@ -3229,7 +3071,6 @@
     },
     {
       "team": "Hawk Tuah Hit Squad",
-      "owner": "Brogan Trout",
       "active": true,
       "espnTeamId": 13,
       "abbreviation": "HAWK",
@@ -3262,7 +3103,6 @@
     },
     {
       "team": "Free Rashee Rice",
-      "owner": "Mark Sommer",
       "active": true,
       "espnTeamId": 14,
       "abbreviation": "Frr",
@@ -3295,7 +3135,6 @@
     },
     {
       "team": "wupwtw",
-      "owner": "Aaron Cole",
       "active": true,
       "espnTeamId": 15,
       "abbreviation": "WRM",
@@ -3328,7 +3167,6 @@
     },
     {
       "team": "Big Hog Gabe",
-      "owner": "Gabe Kemna",
       "active": true,
       "espnTeamId": 16,
       "abbreviation": "BHG",
@@ -3363,10 +3201,10 @@
   "waivers": {
     "source": "espn",
     "available": true,
-    "totalClaims": 2,
-    "totalFreeAgentAdds": 1,
-    "totalAdds": 3,
-    "lastProcessedAt": 1787382262048
+    "totalClaims": 3,
+    "totalFreeAgentAdds": 2,
+    "totalAdds": 5,
+    "lastProcessedAt": 1787555165812
   },
   "history": {
     "wireAdds": {
@@ -3378,7 +3216,6 @@
           {
             "season": 2025,
             "team": "Hawk Invert Tetrahedron Etienne",
-            "owner": "Joe Berni",
             "espnTeamId": 1,
             "abbreviation": "Joe!",
             "logo": "https://g.espncdn.com/lm-static/logo-packs/core/BobsBurgers/Bob.svg",
@@ -3388,7 +3225,6 @@
           {
             "season": 2025,
             "team": "Team Newman",
-            "owner": "Ethan Newman",
             "espnTeamId": 2,
             "abbreviation": "NEWM",
             "logo": "https://g.espncdn.com/lm-static/ffl/images/default_logos/19.svg",
@@ -3398,7 +3234,6 @@
           {
             "season": 2025,
             "team": "brazil bru h",
-            "owner": "Reid Miller",
             "espnTeamId": 3,
             "abbreviation": "AAAa",
             "logo": "https://g.espncdn.com/lm-static/logo-packs/core/StadiumFoods-ESPN/stadium-foods_cheeseburger.svg",
@@ -3408,7 +3243,6 @@
           {
             "season": 2025,
             "team": "Big Chungus",
-            "owner": "Will Dolan",
             "espnTeamId": 4,
             "abbreviation": "W",
             "logo": "https://g.espncdn.com/lm-static/logo-packs/ffl/AtTheStadium-RobbHarskamp/At_The_Stadium_01.svg",
@@ -3418,7 +3252,6 @@
           {
             "season": 2025,
             "team": "Hot Dog U Bean Eaters",
-            "owner": "Gabe Gross",
             "espnTeamId": 5,
             "abbreviation": "BEAN",
             "logo": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/954d2ec0-8c6e-11f0-afb5-e14f006a2a34",
@@ -3428,7 +3261,6 @@
           {
             "season": 2025,
             "team": "Ball Fondilers",
-            "owner": "Tyler Buganski",
             "espnTeamId": 6,
             "abbreviation": "BALz",
             "logo": "https://g.espncdn.com/lm-static/logo-packs/ffl/AtTheStadium-RobbHarskamp/At_The_Stadium_09.svg",
@@ -3438,7 +3270,6 @@
           {
             "season": 2025,
             "team": "Grilled Cheese Enjoyers",
-            "owner": "Christopher Morey",
             "espnTeamId": 7,
             "abbreviation": "UHHH",
             "logo": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/504e37f0-7ee5-11f1-b80e-15498269b8f1",
@@ -3448,7 +3279,6 @@
           {
             "season": 2025,
             "team": "De'von 8chan",
-            "owner": "Michael Moen",
             "espnTeamId": 8,
             "abbreviation": "MMT",
             "logo": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/a16611c0-9d0e-11f1-b987-2730e362696d",
@@ -3458,7 +3288,6 @@
           {
             "season": 2025,
             "team": "Hawk travis etienne jr.",
-            "owner": "Ben Fletcher",
             "espnTeamId": 9,
             "abbreviation": "BEN",
             "logo": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/ed5c3750-9c26-11f1-a12e-9f0d745a1019",
@@ -3468,7 +3297,6 @@
           {
             "season": 2025,
             "team": "New Orleans Nicks",
-            "owner": "Nicholas Fletcher",
             "espnTeamId": 10,
             "abbreviation": "Nick",
             "logo": "https://g.espncdn.com/lm-static/logo-packs/ffl/Blockparty-RobbHars/blockplayers-01.svg",
@@ -3478,7 +3306,6 @@
           {
             "season": 2025,
             "team": "It was a G.I. Jane joke",
-            "owner": "Brendan Smith",
             "espnTeamId": 11,
             "abbreviation": "MEOW",
             "logo": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/23109f90-7be3-11f0-9d0e-d3c969c03a65",
@@ -3488,7 +3315,6 @@
           {
             "season": 2025,
             "team": "Kancharbonnet",
-            "owner": "Devin Kancherla",
             "espnTeamId": 12,
             "abbreviation": ":P",
             "logo": "https://mystique-api.fantasy.espn.com/apis/v1/domains/lm/images/b3e8fd30-9828-11f0-90f7-112fa0f42e74",

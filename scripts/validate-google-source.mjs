@@ -63,11 +63,11 @@ if (data.playoffs.placements.length !== 3) {
   throw new Error(`Expected 3 playoff placements; found ${data.playoffs.placements.length}.`);
 }
 if (!data.meta.espnLive) throw new Error("Expected ESPN to be the live competition source.");
-if (!data.teams.some((team) => team.owner === "Joe Berni" && team.team === "Bobsondinho's Revenge")) {
-  throw new Error("Joe Berni was not matched to the current ESPN team name.");
+if (!data.teams.some((team) => team.espnTeamId === 1 && team.team === "Bobsondinho's Revenge")) {
+  throw new Error("Team 1 was not matched to its current league name.");
 }
-if (!data.teams.some((team) => team.owner === "Christopher Morey" && team.team === "Futbol Experts")) {
-  throw new Error("Christopher Morey was not matched to the ESPN team.");
+if (!data.teams.some((team) => team.espnTeamId === 7 && team.team === "Futbol Experts")) {
+  throw new Error("Team 7 was not matched to its current league name.");
 }
 if (!data.teams.every((team) => team.logo?.startsWith("https://") && team.logoType)) {
   throw new Error("Expected every ESPN team to include a secure logo and logo type.");
@@ -115,6 +115,13 @@ const regularSeasonMath =
 if (Math.abs(regularSeasonMath - data.finances.regularSeasonPool) > 0.001) {
   throw new Error("Weekly matchup shares do not add up to the regular-season pool.");
 }
+const publicData = JSON.stringify(data);
+if (/"owner"\s*:/.test(publicData)) {
+  throw new Error("Public league data must not contain manager names.");
+}
+if (data.meta.sourceUrl || data.meta.espnLeagueUrl) {
+  throw new Error("Public league data must not expose source links.");
+}
 
 if (process.argv.includes("--write")) {
   const destination = new URL("../site/data/league.json", import.meta.url);
@@ -124,8 +131,6 @@ if (process.argv.includes("--write")) {
 console.log(
   JSON.stringify(
     {
-      source: data.meta.sourceUrl,
-      competitionSource: data.meta.espnLeagueUrl,
       espnLive: data.meta.espnLive,
       teams: data.teams.length,
       teamLogos: data.teams.filter((team) => team.logo).length,

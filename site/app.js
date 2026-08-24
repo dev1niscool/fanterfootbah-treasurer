@@ -1,15 +1,12 @@
-import { loadGoogleSheetData } from "./data-source.js";
-
 const DATA_URL = "./data/league.json";
 const UPDATE_CHECK_INTERVAL_MS = 60_000;
-const OWNER_STORAGE_KEY = "fanterfootbah-owner";
+const TEAM_STORAGE_KEY = "fanterfootbah-team";
 
 const state = {
   data: null,
   activeTab: "overview",
-  activeOwner: "",
-  sourceSignature: null,
-  usingLiveData: false,
+  activeTeam: "",
+  dataSignature: null,
   includeBuyIn: false,
 };
 
@@ -178,35 +175,25 @@ function renderSync() {
   const syncedDate = new Date(syncedAt);
   const isValid = !Number.isNaN(syncedDate.valueOf());
 
-  if (state.usingLiveData) {
-    const sources = espnLive ? "ESPN + Sheets live" : "Sheets live";
-    const label = isValid ? `Updated ${dateTime.format(syncedDate)}` : "Live league data loaded";
-    $("#sync-label").textContent = sources;
-    $("#sync-pill").title = `${label} · checks both sources every minute`;
-    $("#sync-pill").classList.toggle("is-stale", !espnLive);
-    $("#footer-sync").textContent = `${label} · ESPN controls names and results; Google Sheets controls owner names and money`;
-    return;
-  }
-
-  const label = isValid ? `Saved ${dateTime.format(syncedDate)}` : "Saved league snapshot";
-  $("#sync-label").textContent = "Backup snapshot";
-  $("#sync-pill").title = `${label} · live sources could not be reached`;
-  $("#sync-pill").classList.add("is-stale");
-  $("#footer-sync").textContent = `${label} · showing the saved backup`;
+  const label = isValid ? `Updated ${dateTime.format(syncedDate)}` : "League data loaded";
+  $("#sync-label").textContent = espnLive ? "League data live" : "League data syncing";
+  $("#sync-pill").title = `${label} · refreshes automatically`;
+  $("#sync-pill").classList.toggle("is-stale", !espnLive);
+  $("#footer-sync").textContent = `${label} · team names, results, and treasurer stats sync automatically`;
 }
 
 function renderQuickStrip() {
-  const team = state.data.summary.find((entry) => entry.owner === state.activeOwner);
+  const team = state.data.summary.find((entry) => entry.team === state.activeTeam);
   if (!team) return;
-  $("#welcome-owner").textContent = team.owner.split(" ")[0];
-  $("#welcome-team").textContent = team.team;
+  $("#welcome-team-name").textContent = team.team;
+  $("#welcome-team-summary").textContent = "Your 2026 dashboard is ready.";
   $("#welcome-record").textContent = recordFor(team);
   $("#welcome-earnings-label").textContent = earningsLabel();
   $("#welcome-earnings").textContent = formatMoney(displayEarnings(team));
   $("#welcome-earnings").className = moneyClass(displayEarnings(team));
   $("#welcome-points").textContent = formatPoints(team.pointsFor);
-  $("#header-owner-initials").innerHTML = teamLogoContents(team, { eager: true });
-  $("#header-owner-name").textContent = team.owner;
+  $("#header-team-logo").innerHTML = teamLogoContents(team, { eager: true });
+  $("#header-team-name").textContent = team.team;
 }
 
 function earningsStandings() {
@@ -232,12 +219,12 @@ function renderOverview() {
     .map((team, index) => {
       const earnings = displayEarnings(team);
       return `
-        <tr${team.owner === state.activeOwner ? ' class="is-you"' : ""}>
+        <tr${team.team === state.activeTeam ? ' class="is-you"' : ""}>
           <td><span class="rank${index < 3 ? " is-top" : ""}">${index + 1}</span></td>
           <td>
             <div class="team-cell">
               ${teamAvatar(team)}
-              <span>${escapeHtml(team.team)}<small>${escapeHtml(team.owner)}${team.owner === state.activeOwner ? " · You" : ""}</small></span>
+              <span>${escapeHtml(team.team)}<small>${escapeHtml(team.abbreviation)}${team.team === state.activeTeam ? " · You" : ""}</small></span>
             </div>
           </td>
           <td>${team.regularWins}</td>
@@ -253,14 +240,14 @@ function renderOverview() {
   const leaderValue = displayEarnings(standings[0]);
   const secondValue = displayEarnings(standings[1]);
   const margin = leaderValue - secondValue;
-  const ownerRank = standings.findIndex((team) => team.owner === state.activeOwner) + 1;
+  const teamRank = standings.findIndex((team) => team.team === state.activeTeam) + 1;
   const competitionStarted = decidedGames.length > 0 || summary.some((team) => team.pointsFor > 0);
   const funStats = [
     {
       icon: "⚡",
       kicker: "Points leader",
       value: competitionStarted ? pointsLeader.team : "Kickoff pending",
-      detail: competitionStarted ? `${formatPoints(pointsLeader.pointsFor)} ESPN points` : "Everyone starts level",
+      detail: competitionStarted ? `${formatPoints(pointsLeader.pointsFor)} league points` : "Everyone starts level",
     },
     {
       icon: "🏆",
@@ -277,8 +264,8 @@ function renderOverview() {
     {
       icon: "✦",
       kicker: "Your money rank",
-      value: ownerRank ? `#${ownerRank}` : "—",
-      detail: ownerRank ? `${state.activeOwner} · ${formatMoney(displayEarnings(standings[ownerRank - 1]))}` : "Choose your name",
+      value: teamRank ? `#${teamRank}` : "—",
+      detail: teamRank ? `${state.activeTeam} · ${formatMoney(displayEarnings(standings[teamRank - 1]))}` : "Choose your team",
     },
   ];
   $("#fun-stats").innerHTML = funStats
@@ -306,7 +293,7 @@ function renderOverview() {
     {
       icon: "W",
       value: `${decidedGames.length} / ${schedule.length}`,
-      label: "ESPN matchups decided",
+      label: "Matchups decided",
       warning: !state.data.meta.espnLive,
     },
     {
@@ -332,7 +319,7 @@ function renderOverview() {
 function renderTeamCards(query = "") {
   const term = query.trim().toLocaleLowerCase();
   const teams = state.data.summary.filter(
-    (team) => !term || `${team.team} ${team.owner} ${team.abbreviation}`.toLocaleLowerCase().includes(term),
+    (team) => !term || `${team.team} ${team.abbreviation}`.toLocaleLowerCase().includes(term),
   );
 
   $("#team-grid").innerHTML = teams.length
@@ -340,7 +327,7 @@ function renderTeamCards(query = "") {
         .map((team) => {
           const earnings = displayEarnings(team);
           return `
-            <article class="team-card${team.owner === state.activeOwner ? " is-you" : ""}">
+            <article class="team-card${team.team === state.activeTeam ? " is-you" : ""}">
               <div>
                 <div class="team-card-top">
                   ${teamAvatar(team)}
@@ -349,18 +336,18 @@ function renderTeamCards(query = "") {
                   </span>
                 </div>
                 <h3>${escapeHtml(team.team)}</h3>
-                <p class="owner-name">${escapeHtml(team.owner)}${team.owner === state.activeOwner ? " · You" : ""}</p>
+                <p class="team-code">${escapeHtml(team.abbreviation)}${team.team === state.activeTeam ? " · You" : ""}</p>
               </div>
               <div class="team-card-stats">
                 <div><span>Record</span><b>${recordFor(team)}</b></div>
-                <div><span>ESPN pts</span><b>${formatPoints(team.pointsFor)}</b></div>
+                <div><span>League pts</span><b>${formatPoints(team.pointsFor)}</b></div>
                 <div><span>${earningsLabel()}</span><b class="${moneyClass(earnings)}">${formatMoney(earnings)}</b></div>
               </div>
             </article>
           `;
         })
         .join("")
-    : '<div class="no-results">No team or owner matches that search.</div>';
+    : '<div class="no-results">No team matches that search.</div>';
 }
 
 function renderHistoricalWaivers() {
@@ -385,11 +372,11 @@ function renderHistoricalWaivers() {
       priorAdds = team.wireAdds;
       const share = (team.wireAdds / maxAdds) * 100;
       return `
-        <div class="waiver-row${team.owner === state.activeOwner ? " is-you" : ""}" style="--waiver-share: ${share}%">
+        <div class="waiver-row${team.team === state.activeTeam ? " is-you" : ""}" style="--waiver-share: ${share}%">
           <span class="waiver-rank${currentRank === 1 ? " is-top" : ""}">${currentRank}</span>
           <div class="waiver-team">
             ${teamAvatar(team)}
-            <span><strong>${escapeHtml(team.team)}</strong><small>${escapeHtml(team.owner)}${team.owner === state.activeOwner ? " · You" : ""}</small></span>
+            <span><strong>${escapeHtml(team.team)}</strong><small>${escapeHtml(team.abbreviation)}${team.team === state.activeTeam ? " · You" : ""}</small></span>
           </div>
           <span class="waiver-bar" aria-hidden="true"><i></i></span>
           <span class="waiver-count"><strong>${team.wireAdds}</strong><small>adds</small></span>
@@ -408,13 +395,13 @@ function renderHistoricalWaivers() {
         <article class="waiver-shame-card">
           <span class="waiver-shame-rank">${index + 1}</span>
           ${teamAvatar(team, "shame-avatar")}
-          <div><small>${cellarLabels[index]}</small><strong>${escapeHtml(team.team)}</strong><span>${escapeHtml(team.owner)}</span></div>
+          <div><small>${cellarLabels[index]}</small><strong>${escapeHtml(team.team)}</strong><span>${escapeHtml(team.abbreviation)}</span></div>
           <b>${team.wireAdds}<small> adds</small></b>
         </article>
       `,
     )
     .join("");
-  $("#waiver-history-shame-note").textContent = "Final 2025 totals from ESPN’s Transaction Counter.";
+  $("#waiver-history-shame-note").textContent = "Final 2025 totals from the official transaction counter.";
 }
 
 function renderWaivers() {
@@ -433,9 +420,9 @@ function renderWaivers() {
   const shameNote = $("#waiver-shame-note");
 
   if (!waiverDataAvailable) {
-    total.innerHTML = "<strong>—</strong><span>ESPN temporarily unavailable</span>";
+    total.innerHTML = "<strong>—</strong><span>League data temporarily unavailable</span>";
     leaderboard.innerHTML = '<div class="waiver-unavailable"><strong>Waiver data is taking a timeout.</strong><span>The saved league data is still available.</span></div>';
-    shame.innerHTML = '<div class="waiver-no-shame"><strong>?</strong><h4>No verdict</h4><p>The cellar reopens when ESPN reconnects.</p></div>';
+    shame.innerHTML = '<div class="waiver-no-shame"><strong>?</strong><h4>No verdict</h4><p>The cellar reopens when transaction data reconnects.</p></div>';
     shameNote.textContent = "";
     return;
   }
@@ -457,11 +444,11 @@ function renderWaivers() {
       priorAdds = team.wireAdds;
       const share = (team.wireAdds / maxAdds) * 100;
       return `
-        <div class="waiver-row${team.owner === state.activeOwner ? " is-you" : ""}" style="--waiver-share: ${share}%">
+        <div class="waiver-row${team.team === state.activeTeam ? " is-you" : ""}" style="--waiver-share: ${share}%">
           <span class="waiver-rank${currentRank === 1 ? " is-top" : ""}">${currentRank}</span>
           <div class="waiver-team">
             ${teamAvatar(team)}
-            <span><strong>${escapeHtml(team.team)}</strong><small>${escapeHtml(team.owner)}${team.owner === state.activeOwner ? " · You" : ""}</small></span>
+            <span><strong>${escapeHtml(team.team)}</strong><small>${escapeHtml(team.abbreviation)}${team.team === state.activeTeam ? " · You" : ""}</small></span>
           </div>
           <span class="waiver-bar" aria-hidden="true"><i></i></span>
           <span class="waiver-count"><strong>${team.wireAdds}</strong><small>${team.waiverClaims}W · ${team.freeAgentAdds}FA</small></span>
@@ -489,7 +476,7 @@ function renderWaivers() {
         <article class="waiver-shame-card">
           <span class="waiver-shame-rank">${index + 1}</span>
           ${teamAvatar(team, "shame-avatar")}
-          <div><small>${cellarLabels[index]}</small><strong>${escapeHtml(team.team)}</strong><span>${escapeHtml(team.owner)}</span></div>
+          <div><small>${cellarLabels[index]}</small><strong>${escapeHtml(team.team)}</strong><span>${escapeHtml(team.abbreviation)}</span></div>
           <b>${team.wireAdds}<small> add${team.wireAdds === 1 ? "" : "s"}</small></b>
         </article>
       `,
@@ -497,7 +484,7 @@ function renderWaivers() {
     .join("");
   shameNote.textContent = teamsAtCutoff > 1
     ? `${teamsAtCutoff} teams are tied at ${cutoffAdds}; three are shown alphabetically.`
-    : "The cellar updates automatically with ESPN.";
+    : "The cellar updates automatically with league activity.";
 }
 
 function matchupTeam(team, winner, score, showScore) {
@@ -516,7 +503,7 @@ function renderScheduleWeek(week) {
   const paidPayouts = games.filter((game) => game.paid).length;
   const payout = games.reduce((sum, game) => sum + game.cashPayout, 0);
   $("#week-summary").innerHTML = `
-    <span><strong>Week ${week}</strong> · ${decided} of ${games.length} ESPN results final</span>
+    <span><strong>Week ${week}</strong> · ${decided} of ${games.length} results final</span>
     <span>${formatMoney(payout)} earned · ${paidPayouts} payout${paidPayouts === 1 ? "" : "s"} paid</span>
   `;
 
@@ -541,7 +528,7 @@ function renderScheduleWeek(week) {
           <div class="matchup-card-footer">
             <span>${game.winner ? `${escapeHtml(game.winner)} won` : `${formatMoney(game.scheduledShare)} prize`}</span>
             <span class="payout-status${game.paid ? " is-paid" : game.winner ? " is-due" : ""}">
-              <small>Sheet payout</small>
+              <small>Treasurer payout</small>
               <b>${payoutStatus}</b>
             </span>
           </div>
@@ -699,9 +686,9 @@ function renderPotSplit({ animate = false } = {}) {
   }
 }
 
-function renderLockerForOwner(owner) {
+function renderLockerForTeam(teamName) {
   const results = $("#locker-results");
-  const team = state.data.summary.find((item) => item.owner === owner);
+  const team = state.data.summary.find((item) => item.team === teamName);
 
   if (!team) {
     results.hidden = true;
@@ -731,7 +718,6 @@ function renderLockerForOwner(owner) {
       <article class="profile-card">
         ${teamAvatar(team, "profile-avatar")}
         <h3>${escapeHtml(team.team)}</h3>
-        <p>${escapeHtml(team.owner)}</p>
         <span class="profile-status">${escapeHtml(paymentCopy)}</span>
       </article>
       <div class="locker-stat-grid">
@@ -741,7 +727,7 @@ function renderLockerForOwner(owner) {
           <small>${team.gamesPlayed} decided matchup${team.gamesPlayed === 1 ? "" : "s"}</small>
         </article>
         <article class="locker-stat">
-          <span>ESPN points</span>
+          <span>League points</span>
           <strong>${formatPoints(team.pointsFor)}</strong>
           <small>${formatPoints(team.pointsAgainst)} points against</small>
         </article>
@@ -753,7 +739,7 @@ function renderLockerForOwner(owner) {
         <article class="locker-stat">
           <span>Winnings paid</span>
           <strong>${formatMoney(team.winningsPaid)}</strong>
-          <small>Cash marked sent in Google Sheets</small>
+          <small>Cash marked sent by the treasurer</small>
         </article>
         <article class="locker-stat">
           <span>Still owed</span>
@@ -763,7 +749,7 @@ function renderLockerForOwner(owner) {
         <article class="locker-stat">
           <span>Playoff seed</span>
           <strong>${team.gamesPlayed ? `#${team.playoffSeed}` : "—"}</strong>
-          <small>${team.gamesPlayed ? "Current ESPN seed" : "Set once play begins"}</small>
+          <small>${team.gamesPlayed ? "Current playoff seed" : "Set once play begins"}</small>
         </article>
       </div>
     </div>
@@ -780,7 +766,7 @@ function renderLockerForOwner(owner) {
       </article>
       <article class="panel locker-panel">
         <p class="panel-kicker">${decided.length ? "Latest results" : "First up"}</p>
-        <h3>Your ESPN matchups</h3>
+        <h3>Your matchups</h3>
         <div class="personal-games">
           ${displayGames
             .map(
@@ -806,15 +792,15 @@ function renderPersonalizedViews() {
   renderOverview();
   renderTeamCards($("#team-search").value);
   renderWaivers();
-  renderLockerForOwner(state.activeOwner);
+  renderLockerForTeam(state.activeTeam);
 }
 
-function setActiveOwner(owner, { save = true } = {}) {
-  if (!state.data.summary.some((team) => team.owner === owner)) return;
-  state.activeOwner = owner;
-  if (save) localStorage.setItem(OWNER_STORAGE_KEY, owner);
-  $("#owner-select").value = owner;
-  $("#signin-owner-select").value = owner;
+function setActiveTeam(teamName, { save = true } = {}) {
+  if (!state.data.summary.some((team) => team.team === teamName)) return;
+  state.activeTeam = teamName;
+  if (save) localStorage.setItem(TEAM_STORAGE_KEY, teamName);
+  $("#team-select").value = teamName;
+  $("#signin-team-select").value = teamName;
   $("#enter-dashboard").disabled = false;
   renderPersonalizedViews();
 }
@@ -825,11 +811,11 @@ function showWelcomeGate({ switcher = false } = {}) {
   document.body.classList.add("is-signing-in");
   $(".page-shell").inert = true;
   $(".page-shell").setAttribute("aria-hidden", "true");
-  if (state.activeOwner) {
-    $("#signin-owner-select").value = state.activeOwner;
+  if (state.activeTeam) {
+    $("#signin-team-select").value = state.activeTeam;
     $("#enter-dashboard").disabled = false;
   }
-  window.setTimeout(() => (switcher ? $("#signin-owner-select") : $("#welcome-title")).focus?.(), 0);
+  window.setTimeout(() => (switcher ? $("#signin-team-select") : $("#welcome-title")).focus?.(), 0);
 }
 
 function closeWelcomeGate() {
@@ -840,17 +826,17 @@ function closeWelcomeGate() {
   $("#main").focus({ preventScroll: true });
 }
 
-function setupOwnerExperience() {
-  const owners = [...state.data.summary].sort((a, b) => a.owner.localeCompare(b.owner));
-  const ownerOptions = owners
-    .map((team) => `<option value="${escapeHtml(team.owner)}">${escapeHtml(team.owner)}</option>`)
+function setupTeamExperience() {
+  const teams = [...state.data.summary].sort((a, b) => a.team.localeCompare(b.team));
+  const teamOptions = teams
+    .map((team) => `<option value="${escapeHtml(team.team)}">${escapeHtml(team.team)}</option>`)
     .join("");
-  $("#owner-select").innerHTML = `<option value="">Choose an owner…</option>${ownerOptions}`;
-  $("#signin-owner-select").innerHTML = `<option value="">Choose an owner…</option>${ownerOptions}`;
+  $("#team-select").innerHTML = `<option value="">Choose a team…</option>${teamOptions}`;
+  $("#signin-team-select").innerHTML = `<option value="">Choose a team…</option>${teamOptions}`;
 
-  const savedOwner = localStorage.getItem(OWNER_STORAGE_KEY);
-  if (savedOwner && owners.some((team) => team.owner === savedOwner)) {
-    setActiveOwner(savedOwner, { save: false });
+  const savedTeam = localStorage.getItem(TEAM_STORAGE_KEY);
+  if (savedTeam && teams.some((team) => team.team === savedTeam)) {
+    setActiveTeam(savedTeam, { save: false });
   } else {
     showWelcomeGate();
   }
@@ -869,22 +855,22 @@ function setupControls() {
   );
   $("#team-search").addEventListener("input", (event) => renderTeamCards(event.target.value));
   $("#week-select").addEventListener("change", (event) => renderScheduleWeek(event.target.value));
-  $("#owner-select").addEventListener("change", (event) => {
-    if (event.target.value) setActiveOwner(event.target.value);
+  $("#team-select").addEventListener("change", (event) => {
+    if (event.target.value) setActiveTeam(event.target.value);
   });
-  $("#signin-owner-select").addEventListener("change", (event) => {
+  $("#signin-team-select").addEventListener("change", (event) => {
     $("#enter-dashboard").disabled = !event.target.value;
   });
   $("#enter-dashboard").addEventListener("click", () => {
-    const owner = $("#signin-owner-select").value;
-    if (!owner) return;
-    setActiveOwner(owner);
+    const teamName = $("#signin-team-select").value;
+    if (!teamName) return;
+    setActiveTeam(teamName);
     closeWelcomeGate();
   });
-  $("#signin-owner-select").addEventListener("keydown", (event) => {
+  $("#signin-team-select").addEventListener("keydown", (event) => {
     if (event.key === "Enter" && event.target.value) $("#enter-dashboard").click();
   });
-  $("#switch-owner").addEventListener("click", () => showWelcomeGate({ switcher: true }));
+  $("#switch-team").addEventListener("click", () => showWelcomeGate({ switcher: true }));
   $("#include-buyin-toggle").addEventListener("change", (event) => {
     state.includeBuyIn = event.target.checked;
     $("#buyin-mode-label").textContent = state.includeBuyIn ? "Buy-in included" : "Buy-in excluded";
@@ -904,32 +890,23 @@ async function init() {
   setupTabs();
   setupControls();
   try {
-    try {
-      const live = await loadGoogleSheetData();
-      state.data = validateData(live.data);
-      state.sourceSignature = live.signature;
-      state.usingLiveData = true;
-    } catch (liveError) {
-      console.warn("Live league data was unavailable; loading the backup snapshot.", liveError);
-      const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: "no-store" });
-      if (!response.ok) throw new Error(`Backup data request failed (${response.status})`);
-      state.data = validateData(await response.json());
-      state.usingLiveData = false;
-      showToast("Live sources are temporarily unavailable. Showing the latest saved backup.");
-    }
+    const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: "no-store" });
+    if (!response.ok) throw new Error(`League data request failed (${response.status})`);
+    state.data = validateData(await response.json());
+    state.dataSignature = state.data.meta?.syncedAt || JSON.stringify(state.data.finances);
 
     renderSync();
     renderSchedule();
     renderPlayoffs();
     renderPotSplit({ animate: state.activeTab === "pot-split" });
     renderWaivers();
-    setupOwnerExperience();
-    if (!state.activeOwner) {
+    setupTeamExperience();
+    if (!state.activeTeam) {
       renderOverview();
       renderTeamCards();
     }
-    if (state.usingLiveData && !state.data.meta.espnLive) {
-      showToast("ESPN is temporarily delayed. Team names use the saved ESPN roster.");
+    if (!state.data.meta.espnLive) {
+      showToast("Live competition data is temporarily delayed. Saved team details are being shown.");
     }
     document.body.classList.remove("is-booting");
     startUpdateChecks();
@@ -937,7 +914,7 @@ async function init() {
     console.error(error);
     $("#sync-label").textContent = "Data unavailable";
     $("#footer-sync").textContent = "The league tracker could not be loaded.";
-    showToast("The league data did not load. Refresh the page or open the Google Sheet directly.");
+    showToast("The league data did not load. Please refresh the page in a moment.");
     document.body.classList.remove("is-booting");
   }
 }
@@ -949,8 +926,11 @@ function startUpdateChecks() {
     if (checking || document.hidden) return;
     checking = true;
     try {
-      const latest = await loadGoogleSheetData();
-      if (!state.usingLiveData || latest.signature !== state.sourceSignature) {
+      const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) throw new Error(`League data request failed (${response.status})`);
+      const latest = validateData(await response.json());
+      const signature = latest.meta?.syncedAt || JSON.stringify(latest.finances);
+      if (signature !== state.dataSignature) {
         window.location.reload();
       }
     } catch (error) {

@@ -1,23 +1,23 @@
 # FanterFootbah Treasurer Room
 
-A polished, mobile-friendly dashboard for the FanterFootbah fantasy football league. Owners choose their name on entry, then get five focused views:
+A polished, mobile-friendly dashboard for the FanterFootbah fantasy football league. Visitors choose their team on entry, then get focused views for:
 
 - Competition-first overview with an earnings leaderboard and race chart
-- Team cards with owner and payment status
+- Team cards with payment status
 - All 14 weeks of regular-season matchups
 - Playoff bracket and prize podium
-- A personal “My Locker” view for each owner
+- A personal “My Locker” view for each team
 
 ## Live data
 
-The dashboard combines two public live sources:
+The deployment combines two live sources on GitHub’s runner:
 
-- Google Sheets is authoritative for real owner names, buy-ins, prizes, and treasurer payment checkmarks.
+- Google Sheets is authoritative for buy-ins, prizes, and treasurer payment checkmarks.
 - ESPN is authoritative for current team names, schedule, scores, and results.
 
-The site checks both once per minute while open and reloads when either changes. The committed `site/data/league.json` file is a working fallback if a live source is temporarily unavailable. No ESPN credentials are stored in the site.
+GitHub Pages refreshes a sanitized `site/data/league.json` snapshot every five minutes. The browser only receives team and league statistics: manager names and source links are omitted, and the backend source module is excluded from the Pages artifact. An open dashboard checks the sanitized snapshot once per minute and reloads when it changes.
 
-Validate both live sources and their owner/team mapping:
+Validate both live sources and their team mapping:
 
 ```bash
 npm install
