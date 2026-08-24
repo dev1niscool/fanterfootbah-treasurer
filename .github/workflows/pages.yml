@@ -35,7 +35,7 @@ jobs:
         run: |
           mkdir public
           rsync -a --exclude data-source.js site/ public/
-          if grep -RilE 'owner|docs\.google\.com/spreadsheets|fantasy\.espn\.com/football/league' public; then
+          if grep -RilE 'owner|abbreviation|docs\.google\.com/spreadsheets|fantasy\.espn\.com/football/league' public; then
             echo "Public privacy check failed."
             exit 1
           fi

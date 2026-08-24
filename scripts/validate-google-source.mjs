@@ -119,6 +119,9 @@ const publicData = JSON.stringify(data);
 if (/"owner"\s*:/.test(publicData)) {
   throw new Error("Public league data must not contain manager names.");
 }
+if (/"abbreviation"\s*:/.test(publicData)) {
+  throw new Error("Public league data must use full team names only.");
+}
 if (data.meta.sourceUrl || data.meta.espnLeagueUrl) {
   throw new Error("Public league data must not expose source links.");
 }

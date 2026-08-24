@@ -224,7 +224,7 @@ function renderOverview() {
           <td>
             <div class="team-cell">
               ${teamAvatar(team)}
-              <span>${escapeHtml(team.team)}<small>${escapeHtml(team.abbreviation)}${team.team === state.activeTeam ? " · You" : ""}</small></span>
+              <span>${escapeHtml(team.team)}${team.team === state.activeTeam ? "<small>You</small>" : ""}</span>
             </div>
           </td>
           <td>${team.regularWins}</td>
@@ -259,7 +259,7 @@ function renderOverview() {
       icon: "↔",
       kicker: "Cash race",
       value: margin === 0 ? "Dead heat" : `${formatMoney(margin)} margin`,
-      detail: margin === 0 ? `${summary.length} teams tied at ${formatMoney(leaderValue)}` : `${standings[0].abbreviation} leads ${standings[1].abbreviation}`,
+      detail: margin === 0 ? `${summary.length} teams tied at ${formatMoney(leaderValue)}` : `${standings[0].team} leads ${standings[1].team}`,
     },
     {
       icon: "✦",
@@ -319,7 +319,7 @@ function renderOverview() {
 function renderTeamCards(query = "") {
   const term = query.trim().toLocaleLowerCase();
   const teams = state.data.summary.filter(
-    (team) => !term || `${team.team} ${team.abbreviation}`.toLocaleLowerCase().includes(term),
+    (team) => !term || team.team.toLocaleLowerCase().includes(term),
   );
 
   $("#team-grid").innerHTML = teams.length
@@ -336,7 +336,7 @@ function renderTeamCards(query = "") {
                   </span>
                 </div>
                 <h3>${escapeHtml(team.team)}</h3>
-                <p class="team-code">${escapeHtml(team.abbreviation)}${team.team === state.activeTeam ? " · You" : ""}</p>
+                ${team.team === state.activeTeam ? '<p class="team-code">You</p>' : ""}
               </div>
               <div class="team-card-stats">
                 <div><span>Record</span><b>${recordFor(team)}</b></div>
@@ -376,7 +376,7 @@ function renderHistoricalWaivers() {
           <span class="waiver-rank${currentRank === 1 ? " is-top" : ""}">${currentRank}</span>
           <div class="waiver-team">
             ${teamAvatar(team)}
-            <span><strong>${escapeHtml(team.team)}</strong><small>${escapeHtml(team.abbreviation)}${team.team === state.activeTeam ? " · You" : ""}</small></span>
+            <span><strong>${escapeHtml(team.team)}</strong>${team.team === state.activeTeam ? "<small>You</small>" : ""}</span>
           </div>
           <span class="waiver-bar" aria-hidden="true"><i></i></span>
           <span class="waiver-count"><strong>${team.wireAdds}</strong><small>adds</small></span>
@@ -395,7 +395,7 @@ function renderHistoricalWaivers() {
         <article class="waiver-shame-card">
           <span class="waiver-shame-rank">${index + 1}</span>
           ${teamAvatar(team, "shame-avatar")}
-          <div><small>${cellarLabels[index]}</small><strong>${escapeHtml(team.team)}</strong><span>${escapeHtml(team.abbreviation)}</span></div>
+          <div><small>${cellarLabels[index]}</small><strong>${escapeHtml(team.team)}</strong></div>
           <b>${team.wireAdds}<small> adds</small></b>
         </article>
       `,
@@ -448,7 +448,7 @@ function renderWaivers() {
           <span class="waiver-rank${currentRank === 1 ? " is-top" : ""}">${currentRank}</span>
           <div class="waiver-team">
             ${teamAvatar(team)}
-            <span><strong>${escapeHtml(team.team)}</strong><small>${escapeHtml(team.abbreviation)}${team.team === state.activeTeam ? " · You" : ""}</small></span>
+            <span><strong>${escapeHtml(team.team)}</strong>${team.team === state.activeTeam ? "<small>You</small>" : ""}</span>
           </div>
           <span class="waiver-bar" aria-hidden="true"><i></i></span>
           <span class="waiver-count"><strong>${team.wireAdds}</strong><small>${team.waiverClaims}W · ${team.freeAgentAdds}FA</small></span>
@@ -476,7 +476,7 @@ function renderWaivers() {
         <article class="waiver-shame-card">
           <span class="waiver-shame-rank">${index + 1}</span>
           ${teamAvatar(team, "shame-avatar")}
-          <div><small>${cellarLabels[index]}</small><strong>${escapeHtml(team.team)}</strong><span>${escapeHtml(team.abbreviation)}</span></div>
+          <div><small>${cellarLabels[index]}</small><strong>${escapeHtml(team.team)}</strong></div>
           <b>${team.wireAdds}<small> add${team.wireAdds === 1 ? "" : "s"}</small></b>
         </article>
       `,

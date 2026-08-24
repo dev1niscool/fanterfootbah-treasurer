@@ -190,7 +190,6 @@ export function mergeEspnData(googleData, espnData = null) {
       season: 2025,
       team: historical.team,
       espnTeamId: historical.id,
-      abbreviation: current?.abbreviation || ESPN_TEAM_FALLBACK.find((team) => team.id === historical.id)?.abbrev || "",
       logo: current?.logo || null,
       logoType: current?.logoType || null,
       wireAdds: historical.wireAdds,
@@ -339,7 +338,7 @@ export function mergeEspnData(googleData, espnData = null) {
       syncedAt: new Date().toISOString(),
       schemaVersion: 5,
     },
-    teams: teams.map(({ oldTeam, ...team }) => team),
+    teams: teams.map(({ oldTeam, abbreviation: _privateAbbreviation, ...team }) => team),
     waivers: {
       source: "espn",
       available: waiverDataAvailable,
@@ -363,7 +362,7 @@ export function mergeEspnData(googleData, espnData = null) {
     buyIns,
     schedule,
     playoffs: { games: playoffGames, placements },
-    summary: summary.map(({ oldTeam, ...team }) => team),
+    summary: summary.map(({ oldTeam, abbreviation: _privateAbbreviation, ...team }) => team),
     finances: {
       ...googleData.finances,
       totalWinningsPaid,
