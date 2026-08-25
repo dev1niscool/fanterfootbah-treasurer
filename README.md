@@ -10,12 +10,12 @@ A polished, mobile-friendly dashboard for the FanterFootbah fantasy football lea
 
 ## Live data
 
-The deployment combines two live sources on GitHub’s runner:
+The dashboard combines two live sources directly in the browser:
 
 - Google Sheets is authoritative for buy-ins, prizes, and treasurer payment checkmarks.
 - ESPN is authoritative for current team names, schedule, scores, and results.
 
-GitHub Pages refreshes a sanitized `site/data/league.json` snapshot every five minutes. The browser only receives team and league statistics: manager names and source links are omitted, and the backend source module is excluded from the Pages artifact. An open dashboard checks the sanitized snapshot once per minute and reloads when it changes.
+An open dashboard checks both sources every 30 seconds and updates its stats in place when either changes. The visible interface remains team-name-only and does not show source links. The committed `site/data/league.json` file remains a fallback if a live source is temporarily unavailable.
 
 Validate both live sources and their team mapping:
 

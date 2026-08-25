@@ -1,12 +1,15 @@
+import { loadGoogleSheetData } from "./data-source.js";
+
 const DATA_URL = "./data/league.json";
-const UPDATE_CHECK_INTERVAL_MS = 60_000;
+const UPDATE_CHECK_INTERVAL_MS = 30_000;
 const TEAM_STORAGE_KEY = "fanterfootbah-team";
 
 const state = {
   data: null,
   activeTab: "overview",
   activeTeam: "",
-  dataSignature: null,
+  sourceSignature: null,
+  usingLiveData: false,
   includeBuyIn: false,
 };
 
@@ -175,11 +178,20 @@ function renderSync() {
   const syncedDate = new Date(syncedAt);
   const isValid = !Number.isNaN(syncedDate.valueOf());
 
+  if (!state.usingLiveData) {
+    const label = isValid ? `Saved ${dateTime.format(syncedDate)}` : "Saved league snapshot";
+    $("#sync-label").textContent = "Saved data";
+    $("#sync-pill").title = `${label} · live sources are reconnecting`;
+    $("#sync-pill").classList.add("is-stale");
+    $("#footer-sync").textContent = `${label} · checking for live updates every 30 seconds`;
+    return;
+  }
+
   const label = isValid ? `Updated ${dateTime.format(syncedDate)}` : "League data loaded";
   $("#sync-label").textContent = espnLive ? "League data live" : "League data syncing";
-  $("#sync-pill").title = `${label} · refreshes automatically`;
+  $("#sync-pill").title = `${label} · checks for updates every 30 seconds`;
   $("#sync-pill").classList.toggle("is-stale", !espnLive);
-  $("#footer-sync").textContent = `${label} · team names, results, and treasurer stats sync automatically`;
+  $("#footer-sync").textContent = `${label} · live stats refresh automatically every 30 seconds`;
 }
 
 function renderQuickStrip() {
@@ -890,10 +902,20 @@ async function init() {
   setupTabs();
   setupControls();
   try {
-    const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: "no-store" });
-    if (!response.ok) throw new Error(`League data request failed (${response.status})`);
-    state.data = validateData(await response.json());
-    state.dataSignature = state.data.meta?.syncedAt || JSON.stringify(state.data.finances);
+    try {
+      const live = await loadGoogleSheetData();
+      state.data = validateData(live.data);
+      state.sourceSignature = live.signature;
+      state.usingLiveData = true;
+    } catch (liveError) {
+      console.warn("Live league data was unavailable; loading the saved snapshot.", liveError);
+      const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) throw new Error(`League data request failed (${response.status})`);
+      state.data = validateData(await response.json());
+      state.sourceSignature = state.data.meta?.syncedAt || JSON.stringify(state.data.finances);
+      state.usingLiveData = false;
+      showToast("Live stats are temporarily unavailable. Showing the latest saved data.");
+    }
 
     renderSync();
     renderSchedule();
@@ -926,12 +948,28 @@ function startUpdateChecks() {
     if (checking || document.hidden) return;
     checking = true;
     try {
-      const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: "no-store" });
-      if (!response.ok) throw new Error(`League data request failed (${response.status})`);
-      const latest = validateData(await response.json());
-      const signature = latest.meta?.syncedAt || JSON.stringify(latest.finances);
-      if (signature !== state.dataSignature) {
-        window.location.reload();
+      const latest = await loadGoogleSheetData();
+      if (!state.usingLiveData || latest.signature !== state.sourceSignature) {
+        const selectedTeamId = state.data?.summary.find((team) => team.team === state.activeTeam)?.espnTeamId;
+        state.data = validateData(latest.data);
+        state.sourceSignature = latest.signature;
+        state.usingLiveData = true;
+        const renamedTeam = state.data.summary.find((team) => team.espnTeamId === selectedTeamId);
+        if (renamedTeam) {
+          state.activeTeam = renamedTeam.team;
+          localStorage.setItem(TEAM_STORAGE_KEY, renamedTeam.team);
+        }
+        renderSync();
+        renderSchedule();
+        renderPlayoffs();
+        renderPotSplit({ animate: state.activeTab === "pot-split" });
+        renderWaivers();
+        setupTeamExperience();
+        if (!state.activeTeam) {
+          renderOverview();
+          renderTeamCards();
+        }
+        showToast("League stats updated.");
       }
     } catch (error) {
       console.warn("The automatic data check could not complete.", error);
